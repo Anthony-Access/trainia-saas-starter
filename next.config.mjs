@@ -50,12 +50,14 @@ const nextConfig = {
               "default-src 'self'",
               // Scripts: Stricter in production (no unsafe-eval)
               `script-src ${scriptSrc}`,
-              // Styles: Allow self and inline styles (needed for CSS-in-JS)
-              "style-src 'self' 'unsafe-inline'",
+              // Styles: Allow self, inline styles, and Google Fonts
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Images: Allow self, data URIs, Clerk, and HTTPS images
               "img-src 'self' data: https: blob:",
-              // Fonts: Allow self and data URIs
-              "font-src 'self' data:",
+              // Fonts: Allow self, data URIs, and Google Fonts CDN
+              "font-src 'self' data: https://fonts.gstatic.com",
+              // Workers: Allow blob: for Clerk web workers
+              "worker-src 'self' blob:",
               // Connect: Allow API calls to backend services
               "connect-src 'self' https://*.supabase.co https://*.clerk.accounts.dev https://*.clerk.com https://api.stripe.com wss://*.supabase.co",
               // Frames: Allow Stripe and Clerk
