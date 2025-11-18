@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers() {
+    // Only allow unsafe-eval in development (needed for HMR)
+    // In production, we use a stricter CSP for better XSS protection
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const scriptSrc = isDevelopment
+      ? "'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com"
+      : "'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com";
+
     return [
       {
         // Apply these headers to all routes
@@ -38,8 +45,8 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              // Scripts: Allow self, Clerk, Stripe, and inline scripts (needed for Next.js)
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com",
+              // Scripts: Stricter in production (no unsafe-eval)
+              `script-src ${scriptSrc}`,
               // Styles: Allow self and inline styles (needed for CSS-in-JS)
               "style-src 'self' 'unsafe-inline'",
               // Images: Allow self, data URIs, Clerk, and HTTPS images
