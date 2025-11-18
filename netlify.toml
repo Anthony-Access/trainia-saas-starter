@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Environment variables must be configured in Netlify UI:
+# Site configuration > Environment variables
+# See NETLIFY_SETUP.md for instructions
