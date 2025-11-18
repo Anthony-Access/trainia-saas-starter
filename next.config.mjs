@@ -8,10 +8,12 @@ const nextConfig = {
     // Development mode allows unsafe-eval for Hot Module Replacement (HMR)
     const isDevelopment = process.env.NODE_ENV === 'development';
 
-    // Script-src: Only allow unsafe-eval in dev, stricter in production
+    // Script-src: Allow unsafe-inline for Next.js hydration (both dev and prod)
+    // Note: In production, Next.js requires 'unsafe-inline' for runtime scripts and hydration
+    // For stricter security, use nonces instead: https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
     const scriptSrc = isDevelopment
       ? "'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com"
-      : "'self' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com";
+      : "'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com";
 
     // Style-src: Allow unsafe-inline (needed for CSS-in-JS and Tailwind)
     const styleSrc = "'self' 'unsafe-inline' https://fonts.googleapis.com";
