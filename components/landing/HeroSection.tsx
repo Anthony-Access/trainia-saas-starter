@@ -10,6 +10,39 @@ export function HeroSection() {
     <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
+      {/* Styles pour l'effet de pinceau */}
+      <style jsx>{`
+        .brush-highlight {
+          position: relative;
+          display: inline-block;
+          padding: 0.2em 0.4em;
+        }
+
+        .brush-highlight::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-1deg);
+          width: calc(100% + 30px);
+          height: 120%;
+          background: linear-gradient(120deg, #A855F7 0%, #D946EF 50%, #EC4899 100%);
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          z-index: -1;
+          box-shadow: 0 6px 25px rgba(168, 85, 247, 0.3);
+          animation: brushPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes brushPulse {
+          0%, 100% {
+            transform: translate(-50%, -50%) rotate(-1deg) scale(1);
+          }
+          50% {
+            transform: translate(-50%, -50%) rotate(-1deg) scale(1.02);
+          }
+        }
+      `}</style>
+
       <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="text-center">
           {/* Tag accroche */}
@@ -24,38 +57,17 @@ export function HeroSection() {
             </p>
           </motion.div>
 
-          {/* Titre principal avec effet pinceau */}
+          {/* Titre principal sur deux lignes avec effet pinceau */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mx-auto max-w-5xl text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl"
+            className="mx-auto max-w-6xl text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl lg:text-8xl"
           >
-            Gagnez vos{' '}
-            <span className="relative inline-block px-1">
-              <span className="relative z-10 text-white">marchés</span>
-              {/* SVG Brush stroke effect - couvre tout le mot */}
-              <svg
-                className="absolute -top-1 -bottom-3 w-[115%] h-[135%] -left-4"
-                viewBox="0 0 200 100"
-                preserveAspectRatio="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <linearGradient id="brushGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style={{ stopColor: '#9333ea', stopOpacity: 1 }} />
-                    <stop offset="50%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 1 }} />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M2,20 Q15,8 50,16 T100,22 Q145,26 180,14 T198,24 L199,78 Q180,92 145,82 T100,76 Q50,86 15,90 T2,78 Z"
-                  fill="url(#brushGradient)"
-                  opacity="0.95"
-                />
-              </svg>
-            </span>{' '}
-            avec l&apos;IA
+            <div className="leading-tight">Gagnez vos</div>
+            <div className="leading-tight">
+              <span className="brush-highlight text-white">marchés</span> avec l&apos;IA
+            </div>
           </motion.h1>
 
           {/* Description */}
@@ -63,7 +75,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-gray-300"
+            className="mx-auto mt-8 max-w-2xl text-lg text-gray-600 dark:text-gray-300 sm:text-xl"
           >
             Générez automatiquement vos mémoires techniques et réponses aux appels d&apos;offres.
             L&apos;intelligence artificielle au service de votre réussite.
