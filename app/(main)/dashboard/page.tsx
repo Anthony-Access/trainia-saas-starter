@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   Bot,
@@ -28,6 +29,7 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser()
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats>({
     automations: 0,
     timeSaved: "0 hours",
@@ -35,9 +37,16 @@ export default function DashboardPage() {
     teamMembers: 1
   })
 
+  // ✅ SECURITY: Redirect to sign-in if user is not authenticated
+  useEffect(() => {
+    if (isLoaded && !user) {
+      router.push('/sign-in')
+    }
+  }, [isLoaded, user, router])
+
   useEffect(() => {
     // Simulate loading dashboard data
-    if (isLoaded) {
+    if (isLoaded && user) {
       setStats({
         automations: 0,
         timeSaved: "0 hours",
@@ -45,9 +54,10 @@ export default function DashboardPage() {
         teamMembers: 1
       })
     }
-  }, [isLoaded])
+  }, [isLoaded, user])
 
-  if (!isLoaded) {
+  // Show loading state while checking auth or redirecting
+  if (!isLoaded || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
