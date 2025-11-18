@@ -1,6 +1,4 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
-import { rateLimitAPI, getClientIdentifier } from '@/utils/rate-limit-distributed';
-import { SecurityLogger } from '@/utils/security-logger';
 
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
 
@@ -11,6 +9,20 @@ const ALLOWED_ORIGINS = [
     'http://localhost:3001',
     // Add your production domains here
 ].filter(Boolean) as string[];
+
+/**
+ * Get client IP from request headers
+ * Edge Runtime compatible version (no external dependencies)
+ */
+function getClientIP(req: Request): string {
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) return realIp;
+  return 'unknown';
+}
 
 export default clerkMiddleware(async (auth, req) => {
   const url = new URL(req.url);
@@ -27,13 +39,7 @@ export default clerkMiddleware(async (auth, req) => {
       );
 
       if (!isAllowed) {
-        console.warn('❌ Invalid origin:', origin);
-        SecurityLogger.logSuspiciousActivity({
-          ip: getClientIdentifier(req),
-          activity: 'CSRF_ATTEMPT',
-          details: { origin, path: url.pathname },
-          path: url.pathname,
-        });
+        console.warn('❌ Invalid origin:', origin, 'from IP:', getClientIP(req));
         return new Response('Forbidden', { status: 403 });
       }
     } else if (referer) {
@@ -50,43 +56,8 @@ export default clerkMiddleware(async (auth, req) => {
     // Note: Requests without origin/referer are allowed (server-side, Postman, etc.)
   }
 
-  // ✅ SECURITY: Rate limiting for all API routes (except webhooks)
-  // Protects against brute force, DoS, and credential stuffing attacks
-  if (url.pathname.startsWith('/api/') && !url.pathname.startsWith('/api/webhooks')) {
-    const { userId } = await auth();
-    const identifier = userId || getClientIdentifier(req);
-
-    const rateLimitResult = await rateLimitAPI(identifier);
-
-    if (!rateLimitResult.success) {
-      console.warn(`⚠️  Rate limit exceeded for ${identifier} on ${url.pathname}`);
-
-      SecurityLogger.logRateLimitExceeded({
-        identifier,
-        endpoint: url.pathname,
-        limit: 30,
-        ip: getClientIdentifier(req),
-      });
-
-      return new Response(
-        JSON.stringify({
-          error: 'Too Many Requests',
-          message: 'Rate limit exceeded. Please try again later.',
-          retryAfter: rateLimitResult.resetIn
-        }),
-        {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-RateLimit-Limit': '30',
-            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-            'X-RateLimit-Reset': rateLimitResult.resetIn.toString(),
-            'Retry-After': rateLimitResult.resetIn.toString()
-          }
-        }
-      );
-    }
-  }
+  // NOTE: Rate limiting moved to individual API routes to avoid Edge Runtime restrictions
+  // See: app/api/*/route.ts for rate limiting implementation
 
   // Protection des routes
   if (isProtectedRoute(req)) {
