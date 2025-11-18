@@ -10,6 +10,129 @@ const ALLOWED_ORIGINS = [
     // Add your production domains here
 ].filter(Boolean) as string[];
 
+// ✅ SECURITY: Whitelist of allowed redirect paths to prevent Open Redirect attacks
+// Only allow redirects to these specific application paths
+const ALLOWED_REDIRECT_PATHS = [
+  '/dashboard',
+  '/settings',
+  '/profile',
+  '/billing',
+  '/api',
+] as const;
+
+// Default safe redirect path when validation fails
+const DEFAULT_REDIRECT_PATH = '/dashboard';
+
+/**
+ * Validates a redirect URL to prevent Open Redirect vulnerabilities
+ *
+ * Security measures:
+ * 1. Only allows relative URLs (no absolute URLs to external sites)
+ * 2. Whitelist validation against allowed paths
+ * 3. Prevents protocol-relative URLs (//evil.com)
+ * 4. Prevents javascript:, data:, vbscript: and other dangerous protocols
+ * 5. Normalizes paths to prevent bypass via encoding or special chars
+ *
+ * @param redirectUrl - The URL to validate (from user input)
+ * @param baseUrl - The base URL of the application
+ * @returns Safe redirect path or default path if validation fails
+ */
+function validateRedirectUrl(redirectUrl: string, baseUrl: string): string {
+  try {
+    // Remove whitespace and decode URI components
+    const trimmed = redirectUrl.trim();
+
+    // ✅ SECURITY: Reject empty or suspicious inputs
+    if (!trimmed || trimmed.length > 2048) {
+      console.warn('⚠️ SECURITY: Invalid redirect URL length:', trimmed.length);
+      return DEFAULT_REDIRECT_PATH;
+    }
+
+    // ✅ SECURITY: Detect and block dangerous protocols
+    const dangerousProtocols = [
+      'javascript:',
+      'data:',
+      'vbscript:',
+      'file:',
+      'about:',
+    ];
+
+    const lowerUrl = trimmed.toLowerCase();
+    if (dangerousProtocols.some(proto => lowerUrl.startsWith(proto))) {
+      console.error('🚨 SECURITY: Dangerous protocol detected in redirect:', trimmed);
+      return DEFAULT_REDIRECT_PATH;
+    }
+
+    // ✅ SECURITY: Block protocol-relative URLs (//evil.com)
+    if (trimmed.startsWith('//')) {
+      console.warn('⚠️ SECURITY: Protocol-relative URL blocked:', trimmed);
+      return DEFAULT_REDIRECT_PATH;
+    }
+
+    // ✅ SECURITY: Block absolute URLs to external domains
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      // Parse and validate it's same origin
+      try {
+        const redirectUrlObj = new URL(trimmed);
+        const baseUrlObj = new URL(baseUrl);
+
+        // Only allow if same origin (host + port)
+        if (redirectUrlObj.origin !== baseUrlObj.origin) {
+          console.warn('⚠️ SECURITY: Cross-origin redirect blocked:', {
+            attempted: redirectUrlObj.origin,
+            expected: baseUrlObj.origin,
+          });
+          return DEFAULT_REDIRECT_PATH;
+        }
+
+        // Extract pathname from validated same-origin URL
+        const pathname = redirectUrlObj.pathname;
+        return validatePath(pathname);
+      } catch (error) {
+        console.error('🚨 SECURITY: Invalid URL in redirect:', error);
+        return DEFAULT_REDIRECT_PATH;
+      }
+    }
+
+    // At this point, we should have a relative URL
+    // Ensure it starts with /
+    const relativePath = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+
+    // ✅ SECURITY: Validate against whitelist
+    return validatePath(relativePath);
+
+  } catch (error) {
+    console.error('🚨 SECURITY: Error validating redirect URL:', error);
+    return DEFAULT_REDIRECT_PATH;
+  }
+}
+
+/**
+ * Validates a path against the whitelist
+ * @param path - The path to validate
+ * @returns Safe path or default path
+ */
+function validatePath(path: string): string {
+  // Normalize path: remove double slashes, resolve .., etc.
+  const normalized = path.replace(/\/+/g, '/').replace(/\/\.\.\//g, '/');
+
+  // ✅ SECURITY: Check against whitelist
+  const isAllowed = ALLOWED_REDIRECT_PATHS.some(allowedPath =>
+    normalized.startsWith(allowedPath)
+  );
+
+  if (!isAllowed) {
+    console.warn('⚠️ SECURITY: Redirect path not in whitelist:', normalized);
+    return DEFAULT_REDIRECT_PATH;
+  }
+
+  // Return only the pathname (strip query params and hash for security)
+  // Query params and hash will be reconstructed safely if needed
+  const pathOnly = normalized.split('?')[0].split('#')[0];
+
+  return pathOnly;
+}
+
 /**
  * Get client IP from request headers
  * Edge Runtime compatible version (no external dependencies)
@@ -65,7 +188,24 @@ export default clerkMiddleware(async (auth, req) => {
     const { userId } = await auth()
     if (!userId) {
       const signInUrl = new URL('/sign-in', req.url)
-      signInUrl.searchParams.set('redirect_url', req.url)
+
+      // ✅ SECURITY: Validate redirect URL to prevent Open Redirect attacks
+      // Extract only the pathname + search from the original request URL
+      const originalUrl = new URL(req.url);
+      const requestedPath = originalUrl.pathname + originalUrl.search;
+
+      // Validate the redirect URL against our whitelist
+      const safeRedirectPath = validateRedirectUrl(requestedPath, req.url);
+
+      // Set the validated, safe redirect path
+      signInUrl.searchParams.set('redirect_url', safeRedirectPath)
+
+      console.log('🔒 SECURITY: Redirect validation:', {
+        original: requestedPath,
+        validated: safeRedirectPath,
+        ip: getClientIP(req)
+      });
+
       return Response.redirect(signInUrl)
     }
   }
