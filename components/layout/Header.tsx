@@ -10,7 +10,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/80">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
@@ -64,7 +64,7 @@ export function Header() {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="border-t border-gray-200 bg-white px-2 py-4 dark:border-gray-800 dark:bg-gray-900">
+          <div className="border-t border-gray-200/50 bg-white/90 px-2 py-4 backdrop-blur-md dark:border-gray-800/50 dark:bg-gray-900/90">
             <div className="space-y-3">
               <SignedOut>
                 <Link
