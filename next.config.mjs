@@ -54,14 +54,14 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Images: Allow self, data URIs, Clerk, and HTTPS images
               "img-src 'self' data: https: blob:",
-              // Fonts: Allow self, data URIs, and Google Fonts CDN
-              "font-src 'self' data: https://fonts.gstatic.com",
+              // Fonts: Allow self, data URIs, Google Fonts CDN, and other CDNs
+              "font-src 'self' data: https://fonts.gstatic.com https://r2cdn.perplexity.ai",
               // Workers: Allow blob: for Clerk web workers
               "worker-src 'self' blob:",
               // Connect: Allow API calls to backend services
               "connect-src 'self' https://*.supabase.co https://*.clerk.accounts.dev https://*.clerk.com https://api.stripe.com wss://*.supabase.co",
-              // Frames: Allow Stripe and Clerk
-              "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.clerk.accounts.dev https://*.clerk.com https://challenges.cloudflare.com",
+              // Frames: Allow Stripe, Clerk, and Netlify (for deploy previews)
+              "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.clerk.accounts.dev https://*.clerk.com https://challenges.cloudflare.com https://app.netlify.com",
               // Objects: Block all
               "object-src 'none'",
               // Base URI: Restrict to self
