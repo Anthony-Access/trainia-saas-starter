@@ -120,12 +120,15 @@ Respond professionally and helpfully within these boundaries.`;
             role: "system",
             content: systemPrompt || defaultSystemPrompt
         },
-        ...chat.map(msg => ({
-            ...msg,
-            content: msg.role === 'user' && typeof msg.content === 'string'
-                ? sanitizePrompt(msg.content)
-                : msg.content
-        }))
+        ...chat.map(msg => {
+            if (msg.role === 'user' && typeof msg.content === 'string') {
+                return {
+                    ...msg,
+                    content: sanitizePrompt(msg.content)
+                } as ChatCompletionMessageParam;
+            }
+            return msg;
+        })
     ];
 
     try {
