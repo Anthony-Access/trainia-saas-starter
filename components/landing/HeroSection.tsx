@@ -22,11 +22,11 @@ export function HeroSection() {
         .brush-highlight::before {
           content: '';
           position: absolute;
-          top: 55%;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(-1deg);
           width: calc(100% + 30px);
-          height: 130%;
+          height: 108%;
           background: linear-gradient(120deg, #A855F7 0%, #D946EF 50%, #EC4899 100%);
           border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
           z-index: 0;
