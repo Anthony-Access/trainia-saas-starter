@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Optional dependencies are loaded using eval('require') in utils/optional-deps.ts
+  // This bypasses webpack's static analysis and allows the app to build
+  // without these packages installed
   async headers() {
     // Only allow unsafe-eval in development (needed for HMR)
     // In production, we use a stricter CSP for better XSS protection

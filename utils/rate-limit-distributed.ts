@@ -55,9 +55,15 @@ async function initializeRedis() {
   }
 
   try {
-    // Dynamic import to avoid build errors if packages are not installed
-    const ratelimitModule = await import('@upstash/ratelimit');
-    const redisModule = await import('@upstash/redis');
+    // Load optional dependencies using eval to bypass webpack
+    const { loadUpstashRatelimit, loadUpstashRedis } = await import('./optional-deps');
+    const ratelimitModule = await loadUpstashRatelimit();
+    const redisModule = await loadUpstashRedis();
+
+    if (!ratelimitModule || !redisModule) {
+      console.warn('⚠️  Upstash packages not installed, falling back to in-memory rate limiting');
+      return null;
+    }
 
     Ratelimit = ratelimitModule.Ratelimit;
     Redis = redisModule.Redis;

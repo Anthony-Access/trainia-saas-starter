@@ -94,11 +94,13 @@ async function logSecurityEvent(event: SecurityEvent) {
       break;
   }
 
-  // Send to Sentry if available (dynamic import to avoid build errors)
+  // Send to Sentry if available (load using eval to bypass webpack)
   if (event.severity === 'ERROR' || event.severity === 'CRITICAL') {
     try {
-      // Try to import Sentry dynamically
-      const Sentry = await import('@sentry/nextjs').catch(() => null);
+      // Load optional Sentry dependency
+      const { loadSentry } = await import('./optional-deps');
+      const Sentry = await loadSentry();
+
       if (Sentry) {
         Sentry.captureMessage(
           `Security Event: ${event.type} - ${event.message}`,
