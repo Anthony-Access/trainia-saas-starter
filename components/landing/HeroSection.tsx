@@ -32,10 +32,28 @@ export function HeroSection() {
             className="mx-auto max-w-5xl text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl"
           >
             Gagnez vos{' '}
-            <span className="relative inline-block">
-              <span className="relative z-10">marchés</span>
-              <span className="absolute -inset-1 -skew-y-1 bg-gradient-to-r from-purple-600 via-violet-500 to-purple-400 opacity-70 blur-sm" />
-              <span className="absolute -inset-0.5 -skew-y-1 bg-gradient-to-r from-purple-600 via-violet-500 to-purple-400" />
+            <span className="relative inline-block px-3">
+              <span className="relative z-10 text-white">marchés</span>
+              {/* SVG Brush stroke effect */}
+              <svg
+                className="absolute inset-0 w-full h-full"
+                viewBox="0 0 250 80"
+                preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="brushGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style={{ stopColor: '#9333ea', stopOpacity: 1 }} />
+                    <stop offset="50%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 1 }} />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M10,40 Q30,20 60,30 T120,35 Q160,38 200,25 T240,40 L245,55 Q200,65 160,58 T100,52 Q60,55 30,60 T10,55 Z"
+                  fill="url(#brushGradient)"
+                  opacity="0.95"
+                />
+              </svg>
             </span>{' '}
             avec l&apos;IA
           </motion.h1>
