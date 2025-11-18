@@ -30,7 +30,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mx-auto max-w-5xl text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl"
           >
-            GÉNÉREZ VOS APPELS D'OFFRES ET MÉMOIRES TECHNIQUES
+            GÉNÉREZ VOS APPELS D&apos;OFFRES ET MÉMOIRES TECHNIQUES
           </motion.h1>
 
           <motion.h2
@@ -48,7 +48,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-gray-300"
           >
-            L'intelligence artificielle au service de vos appels d'offres. Créez des mémoires techniques de qualité en quelques minutes.
+            L&apos;intelligence artificielle au service de vos appels d&apos;offres. Créez des mémoires techniques de qualité en quelques minutes.
           </motion.p>
 
           <motion.div

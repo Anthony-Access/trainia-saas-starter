@@ -27,7 +27,7 @@ export function CTASection() {
           className="text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Prêt à révolutionner vos réponses aux appels d'offres ?
+            Prêt à révolutionner vos réponses aux appels d&apos;offres ?
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-blue-100">
             Rejoignez les entreprises qui utilisent déjà Memo-IA pour générer leurs mémoires techniques et gagner des marchés.
