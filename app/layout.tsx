@@ -4,6 +4,13 @@ import './globals.css'
 import TanstackClientProvider from '@/components/providers/tanstack-client-provider'
 import ClerkClientProvider from '@/components/providers/clerk-client-provider'
 import { Header } from '@/components/layout/Header'
+import { validateEnvironmentVariables } from '@/utils/env-validation'
+
+// ✅ SECURITY: Validate environment variables on server startup
+// This prevents deployment with misconfigured or placeholder values
+if (typeof window === 'undefined') {
+  validateEnvironmentVariables()
+}
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
