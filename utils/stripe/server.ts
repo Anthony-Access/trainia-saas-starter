@@ -190,27 +190,48 @@ export async function createBillingPortalSession() {
         const user = await currentUser()
 
         if (!user) {
-            throw new Error("No User")
+            throw new Error("Unauthorized: No user session found")
         }
 
-        const { data: customer, error } = await supabaseAdmin.from("customers").select("*").eq("id", user.id).maybeSingle()
+        // ✅ SECURITY: Use single() instead of maybeSingle() to ensure customer exists
+        const { data: customer, error } = await supabaseAdmin
+            .from("customers")
+            .select("stripe_customer_id")
+            .eq("id", user.id)
+            .single()
 
         if (error) {
-            throw error
+            console.error('Error fetching customer:', {
+                userId: user.id,
+                error: error.message
+            });
+            throw new Error("Customer not found. Please complete checkout first.")
+        }
+
+        // ✅ SECURITY: Validate stripe_customer_id exists before using it
+        if (!customer?.stripe_customer_id) {
+            throw new Error("No Stripe customer ID found. Please complete checkout first.")
         }
 
         // Create a billing portal session
         const session = await stripe.billingPortal.sessions.create({
-            customer: customer?.stripe_customer_id!,
-            return_url: getURL('/settings'), // URL to redirect after the session
+            customer: customer.stripe_customer_id,
+            return_url: getURL('/settings'),
         });
 
-        // Return the session URL
+        if (!session?.url) {
+            throw new Error("Failed to create billing portal session")
+        }
+
         return session.url;
     } catch (error) {
-        console.error('Error creating billing portal session:', error);
+        console.error('Error creating billing portal session:', {
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
         return {
-            error: "Error creating billing portal session"
+            error: error instanceof Error
+                ? error.message
+                : "Error creating billing portal session"
         }
     }
 }

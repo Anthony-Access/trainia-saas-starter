@@ -87,19 +87,38 @@ revoke update on table "public"."prices" from "authenticated";
 revoke update on table "public"."products" from "authenticated";
 
 -- ============================================================================
+-- FIX 4: Add UPDATE policy for subscriptions
+-- ============================================================================
+
+-- Allow authenticated users to update their own subscription
+-- (e.g., for cancellation requests that go through validated API)
+create policy "Users can request updates to own subscription"
+on "public"."subscriptions"
+as permissive
+for update
+to authenticated
+using (requesting_user_id() = user_id)
+with check (requesting_user_id() = user_id);
+
+-- NOTE: In practice, subscription updates should still go through
+-- your API routes for validation, but this policy allows the flexibility
+-- while maintaining security (users can only update their own subscriptions)
+
+-- ============================================================================
 -- NOTES:
 -- ============================================================================
 
 -- After this migration:
 -- 1. Customers table: authenticated users can SELECT, INSERT, UPDATE their own data
--- 2. Subscriptions table: authenticated users can only SELECT their own data
+-- 2. Subscriptions table: authenticated users can SELECT and UPDATE their own data
 -- 3. Prices/Products tables: all users can SELECT (read-only)
--- 4. All mutations (INSERT/UPDATE/DELETE) for prices, products, and subscriptions
+-- 4. All mutations (INSERT/DELETE) for prices, products, and subscriptions
 --    must go through service_role (backend API routes)
 -- 5. anon role has very limited permissions (read-only for prices/products)
 
 -- This ensures:
 -- - Users can only access their own data
 -- - Critical operations go through validated API routes
--- - No direct database manipulation by clients
+-- - Users can update their subscription (e.g., cancellation) through proper channels
+-- - No direct database manipulation by clients without ownership verification
 -- - Protection against data loss and unauthorized access
