@@ -1,8 +1,13 @@
-"use client"
-
-import { Hero } from '@/components/ui/animated-hero'
-import Image from 'next/image'
+import { HeroSection } from '@/components/landing/HeroSection'
+import { FeatureList } from '@/components/landing/FeatureList'
+import { CTASection } from '@/components/landing/CTASection'
 
 export default function Home() {
-  return <Hero />
+  return (
+    <>
+      <HeroSection />
+      <FeatureList />
+      <CTASection />
+    </>
+  )
 }
