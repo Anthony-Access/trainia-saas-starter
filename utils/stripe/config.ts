@@ -14,6 +14,9 @@ export const stripe = new Stripe(
     // https://stripe.com/docs/api/versioning
     // @ts-ignore
     apiVersion: null,
+    // ✅ SECURITY: Prevent hanging requests and DoS attacks
+    timeout: 10000, // 10 seconds maximum per request
+    maxNetworkRetries: 2, // Automatic retry on network failures
     // Register this as an official Stripe plugin.
     // https://stripe.com/docs/building-plugins#setappinfo
     appInfo: {
@@ -23,3 +26,8 @@ export const stripe = new Stripe(
     }
   }
 );
+
+// Log configuration at startup (server-side only)
+if (typeof window === 'undefined') {
+    console.log('✅ Stripe configured with 10s timeout and 2 retries');
+}

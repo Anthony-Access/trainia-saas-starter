@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   Bot,
@@ -29,7 +28,6 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser()
-  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats>({
     automations: 0,
     timeSaved: "0 hours",
@@ -37,12 +35,8 @@ export default function DashboardPage() {
     teamMembers: 1
   })
 
-  // ✅ SECURITY: Redirect to sign-in if user is not authenticated
-  useEffect(() => {
-    if (isLoaded && !user) {
-      router.push('/sign-in')
-    }
-  }, [isLoaded, user, router])
+  // ✅ SECURITY: Middleware already protects this route - no client-side redirect needed
+  // This prevents redundant checks and improves performance
 
   useEffect(() => {
     // Simulate loading dashboard data
