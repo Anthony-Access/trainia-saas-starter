@@ -4,12 +4,17 @@ const nextConfig = {
   // This bypasses webpack's static analysis and allows the app to build
   // without these packages installed
   async headers() {
-    // Only allow unsafe-eval in development (needed for HMR)
-    // In production, we use a stricter CSP for better XSS protection
+    // ✅ SECURITY: Strict CSP in production (no unsafe-eval, no unsafe-inline for scripts)
+    // Development mode allows unsafe-eval for Hot Module Replacement (HMR)
     const isDevelopment = process.env.NODE_ENV === 'development';
+
+    // Script-src: Only allow unsafe-eval in dev, stricter in production
     const scriptSrc = isDevelopment
       ? "'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com"
-      : "'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com";
+      : "'self' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://challenges.cloudflare.com";
+
+    // Style-src: Allow unsafe-inline (needed for CSS-in-JS and Tailwind)
+    const styleSrc = "'self' 'unsafe-inline' https://fonts.googleapis.com";
 
     return [
       {
@@ -48,10 +53,10 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              // Scripts: Stricter in production (no unsafe-eval)
+              // Scripts: Stricter in production (no unsafe-eval, no unsafe-inline)
               `script-src ${scriptSrc}`,
-              // Styles: Allow self, inline styles, and Google Fonts
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              // Styles: Allow self, inline styles (needed for Tailwind), and Google Fonts
+              `style-src ${styleSrc}`,
               // Images: Allow self, data URIs, Clerk, and HTTPS images
               "img-src 'self' data: https: blob:",
               // Fonts: Allow self, data URIs, Google Fonts CDN, and other CDNs
