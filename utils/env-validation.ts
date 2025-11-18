@@ -48,19 +48,19 @@ const REQUIRED_VARIABLES = {
     description: 'Supabase service role key (server-side only, bypasses RLS)',
   },
 
-  // Stripe Payments
+  // Stripe Payments (optional - can be configured later)
   STRIPE_SECRET_KEY: {
-    required: true,
+    required: false,
     public: false,
     description: 'Stripe secret key for payment processing',
   },
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: {
-    required: true,
+    required: false,
     public: true,
     description: 'Stripe publishable key (client-side)',
   },
   STRIPE_WEBHOOK_SECRET: {
-    required: true,
+    required: false,
     public: false,
     description: 'Stripe webhook signing secret',
   },
