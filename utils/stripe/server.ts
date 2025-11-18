@@ -10,6 +10,8 @@ import {
 } from '@/utils/helpers';
 import { Tables } from '@/types/database.types';
 import { auth, currentUser } from '@clerk/nextjs/server';
+import { RateLimiters } from '@/utils/rate-limit-actions';
+import { AuditLoggers } from '@/utils/audit-logger';
 
 type Price = Tables<'prices'>;
 
@@ -20,6 +22,14 @@ export async function checkoutWithStripe(
     referral?: string
 ) {
     try {
+        // ✅ SECURITY: Rate limit checkout sessions (3 per 5 minutes)
+        const rateLimitResult = await RateLimiters.checkout();
+        if (!rateLimitResult.success) {
+            throw new Error(
+                `Too many checkout attempts. Please try again in ${Math.ceil((rateLimitResult.reset - Date.now() / 1000) / 60)} minutes.`
+            );
+        }
+
         // Get the user from Supabase auth
         const user = await currentUser()
 
@@ -95,6 +105,14 @@ export async function checkoutWithStripe(
             throw new Error('Unable to create checkout session.');
         }
 
+        // ✅ SECURITY: Log checkout session creation for audit trail
+        if (session) {
+            await AuditLoggers.checkoutInitiated({
+                priceId: price.id,
+                amount: price.unit_amount || undefined,
+            });
+        }
+
         // Instead of returning a Response, just return the data or error.
         if (session) {
             return session
@@ -127,6 +145,14 @@ export async function checkoutWithStripe(
 
 export async function createBillingPortalSession() {
     try {
+        // ✅ SECURITY: Rate limit billing portal access (10 per hour)
+        const rateLimitResult = await RateLimiters.billingPortal();
+        if (!rateLimitResult.success) {
+            throw new Error(
+                `Too many billing portal requests. Please try again in ${Math.ceil((rateLimitResult.reset - Date.now() / 1000) / 60)} minutes.`
+            );
+        }
+
         const user = await currentUser()
 
         if (!user) {
@@ -162,6 +188,9 @@ export async function createBillingPortalSession() {
         if (!session?.url) {
             throw new Error("Failed to create billing portal session")
         }
+
+        // ✅ SECURITY: Log billing portal access for audit trail
+        await AuditLoggers.billingPortalAccessed();
 
         return session.url;
     } catch (error) {

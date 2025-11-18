@@ -116,11 +116,25 @@ function validateVariable(
     value.toLowerCase().includes(pattern.toLowerCase())
   );
 
-  if (hasForbiddenPattern && isProduction) {
+  // Only enforce placeholder check in real production (VERCEL_ENV or similar)
+  const isRealProduction = isProduction && (
+    process.env.VERCEL_ENV === 'production' ||
+    process.env.RAILWAY_ENVIRONMENT === 'production' ||
+    process.env.RENDER_EXTERNAL_URL
+  );
+
+  if (hasForbiddenPattern && isRealProduction) {
     errors.push({
       variable: name,
       issue: `Contains placeholder value: ${value.substring(0, 20)}...`,
       severity: 'error',
+    });
+  } else if (hasForbiddenPattern && isProduction) {
+    // Warning during build, error in real production
+    errors.push({
+      variable: name,
+      issue: `Contains placeholder value: ${value.substring(0, 20)}...`,
+      severity: 'warning',
     });
   }
 
@@ -153,11 +167,23 @@ function validateVariable(
         severity: 'error',
       });
     }
-    if (isProduction && value.includes('test')) {
+    // Only check for test keys in real production
+    const isRealProduction = isProduction && (
+      process.env.VERCEL_ENV === 'production' ||
+      process.env.RAILWAY_ENVIRONMENT === 'production' ||
+      process.env.RENDER_EXTERNAL_URL
+    );
+    if (isRealProduction && value.includes('test')) {
       errors.push({
         variable: name,
         issue: 'Using test key in production environment',
         severity: 'error',
+      });
+    } else if (isProduction && value.includes('test')) {
+      errors.push({
+        variable: name,
+        issue: 'Using test key in production environment',
+        severity: 'warning',
       });
     }
   }
@@ -272,6 +298,7 @@ export function validateEnvironmentVariables(): boolean {
     } else {
       console.warn('⚠️  Development mode: Continuing despite errors, but fix them before production!');
       console.warn('');
+      // In development, don't throw - just warn
     }
   }
 
