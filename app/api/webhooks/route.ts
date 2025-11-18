@@ -7,6 +7,7 @@ import {
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin';
+import { rateLimit, getClientIdentifier } from '@/utils/rate-limit';
 
 const relevantEvents = new Set([
   'product.created',
@@ -22,19 +23,46 @@ const relevantEvents = new Set([
 ]);
 
 export async function POST(req: Request) {
+  // Rate limiting: Allow 50 webhook calls per minute per IP
+  // This prevents abuse while allowing legitimate high-volume webhook processing
+  const identifier = getClientIdentifier(req);
+  const rateLimitResult = rateLimit(identifier, {
+    limit: 50,
+    windowInSeconds: 60
+  });
+
+  if (!rateLimitResult.success) {
+    console.warn(`⚠️  Rate limit exceeded for ${identifier}`);
+    return new Response('Too Many Requests', {
+      status: 429,
+      headers: {
+        'X-RateLimit-Limit': '50',
+        'X-RateLimit-Remaining': '0',
+        'X-RateLimit-Reset': rateLimitResult.resetIn.toString(),
+        'Retry-After': rateLimitResult.resetIn.toString()
+      }
+    });
+  }
+
   const body = await req.text();
   const sig = req.headers.get('stripe-signature') as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   let event: Stripe.Event;
 
   try {
-    if (!sig || !webhookSecret)
-      return new Response('Webhook secret not found.', { status: 400 });
+    if (!sig || !webhookSecret) {
+      console.error('❌ Webhook configuration error: Missing signature or secret');
+      return new Response('Webhook configuration error', { status: 400 });
+    }
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
   } catch (err: any) {
-    console.log(`❌ Error message: ${err.message}`);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+    console.error(`❌ Webhook signature verification failed:`, {
+      error: err.message,
+      hasSignature: !!sig,
+      hasSecret: !!webhookSecret
+    });
+    return new Response('Webhook signature verification failed', { status: 400 });
   }
 
   if (relevantEvents.has(event.type)) {
@@ -79,16 +107,18 @@ export async function POST(req: Request) {
           console.log(`Unhandled event type ${event.type}`);
       }
     } catch (error) {
-      console.log(error);
-      return new Response(
-        'Webhook handler failed. View your Next.js function logs.',
-        {
-          status: 400
-        }
-      );
+      console.error(`❌ Webhook handler error for event ${event.type}:`, {
+        eventId: event.id,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      return new Response('Webhook processing failed', { status: 500 });
     }
   } else {
-    return new Response(`Unsupported event type: ${event.type}`);
+    console.log(`ℹ️  Ignored event type: ${event.type}`);
   }
-  return new Response(JSON.stringify({ received: true }));
+
+  return new Response(JSON.stringify({ received: true }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
 }
