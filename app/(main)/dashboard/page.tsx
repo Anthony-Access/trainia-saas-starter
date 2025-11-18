@@ -137,7 +137,7 @@ export default function DashboardPage() {
                 Welcome back, {firstName}!
               </h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                Prêt à générer vos appels d'offres et mémoires techniques ?
+                Prêt à générer vos appels d&apos;offres et mémoires techniques ?
               </p>
             </div>
             <div className="mt-4 sm:mt-0">
