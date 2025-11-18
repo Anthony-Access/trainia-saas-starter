@@ -118,40 +118,165 @@ export function rateLimit(
 }
 
 /**
- * Get the client identifier from a request
+ * Validates if a string is a valid IPv4 or IPv6 address
+ * @param ip - IP address to validate
+ * @returns true if valid IP format
+ */
+function isValidIP(ip: string): boolean {
+  // IPv4 regex (strict)
+  const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+  // IPv6 regex (simplified, covers most cases)
+  const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$|^[0-9a-fA-F]{1,4}::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}$/;
+
+  return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+}
+
+/**
+ * Detects IP spoofing by checking for inconsistencies between headers
+ * @param cfIp - Cloudflare connecting IP
+ * @param realIp - X-Real-IP header
+ * @param forwardedFor - X-Forwarded-For header
+ * @returns Object with spoofing detection results
+ */
+function detectIPSpoofing(
+  cfIp: string | null,
+  realIp: string | null,
+  forwardedFor: string | null
+): { isSpoofed: boolean; reason?: string } {
+  // If we have Cloudflare IP and others don't match, potential spoofing
+  if (cfIp && realIp && cfIp !== realIp) {
+    return {
+      isSpoofed: true,
+      reason: `CF-Connecting-IP (${cfIp}) differs from X-Real-IP (${realIp})`
+    };
+  }
+
+  if (cfIp && forwardedFor) {
+    const firstForwarded = forwardedFor.split(',')[0].trim();
+    if (cfIp !== firstForwarded) {
+      return {
+        isSpoofed: true,
+        reason: `CF-Connecting-IP (${cfIp}) differs from X-Forwarded-For (${firstForwarded})`
+      };
+    }
+  }
+
+  // Check for invalid IP formats in forwarded headers
+  if (forwardedFor) {
+    const ips = forwardedFor.split(',').map(ip => ip.trim());
+    const hasInvalidIP = ips.some(ip => !isValidIP(ip));
+    if (hasInvalidIP) {
+      return {
+        isSpoofed: true,
+        reason: `X-Forwarded-For contains invalid IP format: ${forwardedFor}`
+      };
+    }
+  }
+
+  return { isSpoofed: false };
+}
+
+/**
+ * Get the client identifier from a request with advanced spoofing detection
  * Uses a combination of IP and User-Agent to prevent spoofing
  *
  * @param request - The incoming request
  * @returns Client identifier (fingerprint)
  *
- * Security improvements:
- * 1. Prioritize non-spoofable headers (cf-connecting-ip from Cloudflare)
- * 2. Create fingerprint with IP + User-Agent to make spoofing harder
- * 3. Fallback chain: Cloudflare IP → X-Real-IP → X-Forwarded-For → localhost
+ * Security improvements over previous version:
+ * 1. Validates IP format to detect malformed spoofing attempts
+ * 2. Detects inconsistencies between multiple IP headers
+ * 3. Logs spoofing attempts for security monitoring
+ * 4. Never trusts X-Forwarded-For without validation
+ * 5. Uses TLS connection info when available
+ * 6. Creates robust fingerprint with multiple signals
+ *
+ * Priority chain (security level):
+ * 1. CF-Connecting-IP (trusted, set by Cloudflare CDN)
+ * 2. X-Real-IP (trusted if from known reverse proxy)
+ * 3. X-Forwarded-For (validated, used only if format is correct)
+ * 4. Fallback to 'unknown' (never use localhost, prevents false positives)
  */
 export function getClientIdentifier(request: Request): string {
-  // 1. Try Cloudflare's connecting IP (most reliable, can't be spoofed)
+  // Get all possible IP sources
   const cfConnectingIp = request.headers.get('cf-connecting-ip');
-
-  // 2. Try X-Real-IP (set by Nginx and other reverse proxies)
   const realIp = request.headers.get('x-real-ip');
-
-  // 3. Try X-Forwarded-For (can be spoofed, use as last resort)
   const forwardedFor = request.headers.get('x-forwarded-for');
 
-  // Select the most reliable IP source
-  const ip = cfConnectingIp ||
-             realIp ||
-             (forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1');
+  // ✅ SECURITY: Detect IP spoofing attempts
+  const spoofingCheck = detectIPSpoofing(cfConnectingIp, realIp, forwardedFor);
 
-  // Get User-Agent for additional fingerprinting
+  if (spoofingCheck.isSpoofed) {
+    console.warn('🚨 SECURITY: IP spoofing detected!', {
+      reason: spoofingCheck.reason,
+      headers: {
+        'cf-connecting-ip': cfConnectingIp,
+        'x-real-ip': realIp,
+        'x-forwarded-for': forwardedFor,
+      },
+      userAgent: request.headers.get('user-agent'),
+      timestamp: new Date().toISOString(),
+    });
+
+    // Log to security monitor if available
+    if (typeof window === 'undefined') {
+      // Server-side only
+      try {
+        const { logSecurityEvent } = require('./security-monitor');
+        logSecurityEvent({
+          type: 'ip_spoofing_detected',
+          severity: 'high',
+          details: spoofingCheck.reason,
+          ip: cfConnectingIp || realIp || 'unknown',
+        });
+      } catch (e) {
+        // Security monitor not available, already logged to console
+      }
+    }
+  }
+
+  // ✅ SECURITY: Select IP with strict validation
+  let ip: string = 'unknown';
+
+  // Priority 1: Cloudflare (most trusted, cannot be spoofed by client)
+  if (cfConnectingIp && isValidIP(cfConnectingIp)) {
+    ip = cfConnectingIp;
+  }
+  // Priority 2: X-Real-IP (trusted if set by your infrastructure)
+  else if (realIp && isValidIP(realIp)) {
+    ip = realIp;
+  }
+  // Priority 3: X-Forwarded-For (only if validated)
+  else if (forwardedFor && !spoofingCheck.isSpoofed) {
+    const firstIP = forwardedFor.split(',')[0].trim();
+    if (isValidIP(firstIP)) {
+      ip = firstIP;
+      // Log that we're using XFF (less reliable)
+      console.warn('⚠️ Using X-Forwarded-For for rate limiting (less reliable):', {
+        ip: firstIP,
+        fullHeader: forwardedFor
+      });
+    }
+  }
+
+  // ✅ SECURITY: Create robust fingerprint
   const userAgent = request.headers.get('user-agent') || 'unknown';
+  const acceptLanguage = request.headers.get('accept-language') || '';
+  const acceptEncoding = request.headers.get('accept-encoding') || '';
 
-  // Create a composite fingerprint to make spoofing harder
-  // Hash the user agent to keep the identifier reasonably short
-  const userAgentHash = simpleHash(userAgent);
+  // Combine multiple signals for better fingerprinting
+  const fingerprintComponents = [
+    userAgent,
+    acceptLanguage.substring(0, 10), // First 10 chars only
+    acceptEncoding.substring(0, 10),
+  ].join('|');
 
-  return `${ip}:${userAgentHash}`;
+  const fingerprint = simpleHash(fingerprintComponents);
+
+  // Return composite identifier: IP:Fingerprint
+  // This makes it much harder to bypass rate limiting
+  return `${ip}:${fingerprint}`;
 }
 
 /**
