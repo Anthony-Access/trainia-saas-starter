@@ -7,10 +7,21 @@ import {
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin';
-import { rateLimit, getClientIdentifier } from '@/utils/rate-limit';
+import { rateLimitWebhook, getClientIdentifier, getRateLimitMode } from '@/utils/rate-limit-distributed';
+import { SecurityLogger } from '@/utils/security-logger';
 
 // Force dynamic rendering - don't statically analyze during build
 export const dynamic = 'force-dynamic';
+
+// Log rate limiting mode on first load
+if (typeof window === 'undefined') {
+  const mode = getRateLimitMode();
+  console.log(`🔒 Webhook rate limiting mode: ${mode}`);
+  if (mode === 'in-memory') {
+    console.warn('⚠️  Using in-memory rate limiting. For production with multiple instances, configure Upstash Redis.');
+    console.warn('   Visit: https://upstash.com (free tier available)');
+  }
+}
 
 const relevantEvents = new Set([
   'product.created',
@@ -27,20 +38,27 @@ const relevantEvents = new Set([
 
 export async function POST(req: Request) {
   // Rate limiting: Allow 50 webhook calls per minute per IP
+  // Uses distributed Redis if configured, otherwise falls back to in-memory
   // This prevents abuse while allowing legitimate high-volume webhook processing
   const identifier = getClientIdentifier(req);
-  const rateLimitResult = rateLimit(identifier, {
-    limit: 50,
-    windowInSeconds: 60
-  });
+  const rateLimitResult = await rateLimitWebhook(identifier);
 
   if (!rateLimitResult.success) {
     console.warn(`⚠️  Rate limit exceeded for ${identifier}`);
+
+    // ✅ SECURITY: Log rate limit violation
+    SecurityLogger.logRateLimitExceeded({
+      identifier,
+      endpoint: '/api/webhooks',
+      limit: 50,
+      ip: identifier,
+    });
+
     return new Response('Too Many Requests', {
       status: 429,
       headers: {
         'X-RateLimit-Limit': '50',
-        'X-RateLimit-Remaining': '0',
+        'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
         'X-RateLimit-Reset': rateLimitResult.resetIn.toString(),
         'Retry-After': rateLimitResult.resetIn.toString()
       }
@@ -65,6 +83,14 @@ export async function POST(req: Request) {
       hasSignature: !!sig,
       hasSecret: !!webhookSecret
     });
+
+    // ✅ SECURITY: Log invalid webhook signature (potential attack)
+    SecurityLogger.logInvalidWebhookSignature({
+      ip: identifier,
+      endpoint: '/api/webhooks',
+      provider: 'Stripe',
+    });
+
     return new Response('Webhook signature verification failed', { status: 400 });
   }
 
