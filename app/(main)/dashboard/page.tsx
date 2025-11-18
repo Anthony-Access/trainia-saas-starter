@@ -80,7 +80,7 @@ export default function DashboardPage() {
     },
     {
       title: "View Documentation",
-      description: "Learn how to maximize Train-IA",
+      description: "Learn how to maximize Memo-IA",
       icon: HelpCircle,
       href: "/docs"
     }
@@ -137,7 +137,7 @@ export default function DashboardPage() {
                 Welcome back, {firstName}!
               </h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                Ready to automate your business processes and boost productivity?
+                Prêt à générer vos appels d'offres et mémoires techniques ?
               </p>
             </div>
             <div className="mt-4 sm:mt-0">
@@ -286,10 +286,10 @@ export default function DashboardPage() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
-                    New to Train-IA?
+                    Nouveau sur Memo-IA ?
                   </h3>
                   <p className="mt-1 text-blue-700 dark:text-blue-300">
-                    Check out our getting started guide to learn the basics and set up your first automation.
+                    Consultez notre guide de démarrage pour apprendre les bases et générer votre premier document.
                   </p>
                 </div>
                 <div className="mt-4 sm:mt-0">

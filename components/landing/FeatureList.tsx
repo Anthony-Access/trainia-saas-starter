@@ -49,10 +49,10 @@ export function FeatureList() {
           className="text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-            Why Choose Train-IA?
+            Pourquoi choisir Memo-IA ?
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-            Powerful features designed to transform how your business operates
+            Des fonctionnalités puissantes pour générer vos documents professionnels
           </p>
         </motion.div>
 
