@@ -16,21 +16,27 @@ export function HeroSection() {
           position: relative;
           display: inline-block;
           padding: 0.2em 0.4em;
+          z-index: 1;
         }
 
         .brush-highlight::before {
           content: '';
           position: absolute;
-          top: 50%;
+          top: 55%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(-1deg);
           width: calc(100% + 30px);
-          height: 120%;
+          height: 130%;
           background: linear-gradient(120deg, #A855F7 0%, #D946EF 50%, #EC4899 100%);
           border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-          z-index: -1;
+          z-index: 0;
           box-shadow: 0 6px 25px rgba(168, 85, 247, 0.3);
           animation: brushPulse 3s ease-in-out infinite;
+        }
+
+        .brush-highlight > span {
+          position: relative;
+          z-index: 1;
         }
 
         @keyframes brushPulse {
@@ -66,7 +72,9 @@ export function HeroSection() {
           >
             <div className="leading-tight">Gagnez vos</div>
             <div className="leading-tight">
-              <span className="brush-highlight text-white">marchés</span> avec l&apos;IA
+              <span className="brush-highlight">
+                <span className="text-white">marchés</span>
+              </span> avec l&apos;IA
             </div>
           </motion.h1>
 
