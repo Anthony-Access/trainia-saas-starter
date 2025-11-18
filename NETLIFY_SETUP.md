@@ -28,9 +28,6 @@ STRIPE_SECRET_KEY=REPLACE_WITH_YOUR_STRIPE_SECRET_KEY
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=REPLACE_WITH_YOUR_STRIPE_PUBLISHABLE_KEY
 STRIPE_WEBHOOK_SECRET=REPLACE_WITH_YOUR_STRIPE_WEBHOOK_SECRET
 
-# OpenAI (PLACEHOLDER - l'IA ne fonctionnera pas)
-OPENAI_API_KEY=REPLACE_WITH_YOUR_OPENAI_API_KEY
-
 # Application URL (remplacez par votre URL Netlify)
 NEXT_PUBLIC_SITE_URL=https://votre-site.netlify.app
 ```
@@ -59,20 +56,14 @@ Remplacez les placeholders par les vraies valeurs dans les variables d'environne
 - Créez un nouveau projet
 - Settings → API
 - Copiez `URL`, `anon public key`, et `service_role key`
-- ⚠️ **Important**: Exécutez les migrations SQL avant:
+- ⚠️ **Important**: Exécutez la migration SQL avant:
   - `supabase/migrations/20250118000000_fix_security_policies.sql`
-  - `supabase/migrations/20250118100000_create_ai_usage.sql`
 
 #### 💳 Stripe (Payments)
 - Créez un compte sur https://stripe.com
 - Mode Test → API Keys
 - Copiez `Secret key` et `Publishable key`
 - Webhooks → Add endpoint → Copiez `Signing secret`
-
-#### 🤖 OpenAI (AI)
-- Créez un compte sur https://platform.openai.com
-- API Keys → Create new secret key
-- Copiez la clé
 
 ### Une fois les vraies clés ajoutées:
 
