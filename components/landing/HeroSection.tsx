@@ -36,7 +36,7 @@ export function HeroSection() {
               <span className="relative z-10 text-white">marchés</span>
               {/* SVG Brush stroke effect - couvre tout le mot */}
               <svg
-                className="absolute -inset-1 w-[115%] h-full -left-4"
+                className="absolute -top-1 -bottom-3 w-[115%] h-[135%] -left-4"
                 viewBox="0 0 200 100"
                 preserveAspectRatio="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@ export function HeroSection() {
                   </linearGradient>
                 </defs>
                 <path
-                  d="M2,25 Q15,12 50,20 T100,26 Q145,30 180,18 T198,28 L199,72 Q180,85 145,75 T100,70 Q50,78 15,82 T2,70 Z"
+                  d="M2,20 Q15,8 50,16 T100,22 Q145,26 180,14 T198,24 L199,78 Q180,92 145,82 T100,76 Q50,86 15,90 T2,78 Z"
                   fill="url(#brushGradient)"
                   opacity="0.95"
                 />
