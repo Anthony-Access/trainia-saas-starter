@@ -47,7 +47,7 @@ const nextConfig = {
               // Fonts: Allow self and data URIs
               "font-src 'self' data:",
               // Connect: Allow API calls to backend services
-              "connect-src 'self' https://*.supabase.co https://*.clerk.accounts.dev https://*.clerk.com https://api.stripe.com https://api.openai.com wss://*.supabase.co",
+              "connect-src 'self' https://*.supabase.co https://*.clerk.accounts.dev https://*.clerk.com https://api.stripe.com wss://*.supabase.co",
               // Frames: Allow Stripe and Clerk
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.clerk.accounts.dev https://*.clerk.com https://challenges.cloudflare.com",
               // Objects: Block all
