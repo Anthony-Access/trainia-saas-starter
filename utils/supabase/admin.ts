@@ -3,6 +3,9 @@ import { toDateTime } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe/config';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from '@/types/database.types';
+import { validateStripeMetadata } from '@/utils/validation/stripe-metadata';
+import { validateBillingDetails } from '@/utils/validation/billing-details';
+import { withLock } from '@/utils/distributed-lock';
 
 export function createAdminClient() {
     const supabase = createClient<Database>(
@@ -22,10 +25,10 @@ const TRIAL_PERIOD_DAYS = 0;
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
-// Use placeholder values during build time to prevent errors
+// ✅ SECURITY: Use simple string placeholder instead of decodable JWT
 export const supabaseAdmin = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTYwMDAwMDAwMCwiZXhwIjoxOTAwMDAwMDAwfQ.placeholder'
+    process.env.SUPABASE_SERVICE_ROLE_KEY || 'PLACEHOLDER_SERVICE_ROLE_KEY_NOT_A_REAL_JWT'
 );
 
 const upsertProductRecord = async (product: Stripe.Product) => {
@@ -35,7 +38,11 @@ const upsertProductRecord = async (product: Stripe.Product) => {
         name: product.name,
         description: product.description ?? null,
         image: product.images?.[0] ?? null,
-        metadata: product.metadata,
+        // ✅ SECURITY: Validate metadata to prevent XSS/injection attacks
+        metadata: validateStripeMetadata(product.metadata, {
+            source: 'product',
+            id: product.id
+        }),
         marketing_features: product.marketing_features.map(m => m.name || "") ?? [],
         live_mode: product.livemode
     };
@@ -135,71 +142,83 @@ const createOrRetrieveCustomer = async ({
     uuid: string;
     referral?: string
 }) => {
-    // Check if the customer already exists in Supabase
-    const { data: existingSupabaseCustomer, error: queryError } =
-        await supabaseAdmin
-            .from('customers')
-            .select('*')
-            .eq('id', uuid)
-            .maybeSingle();
+    // ✅ SECURITY: Use distributed lock to prevent race conditions
+    // This ensures only one webhook can create/update a customer at a time
+    return withLock(
+        {
+            key: `lock:customer:${uuid}`,
+            ttl: 30, // 30 seconds
+            maxRetries: 10,
+            retryDelay: 500
+        },
+        async () => {
+            // Check if the customer already exists in Supabase
+            const { data: existingSupabaseCustomer, error: queryError } =
+                await supabaseAdmin
+                    .from('customers')
+                    .select('*')
+                    .eq('id', uuid)
+                    .maybeSingle();
 
-    if (queryError) {
-        throw new Error(`Supabase customer lookup failed: ${queryError.message}`);
-    }
+            if (queryError) {
+                throw new Error(`Supabase customer lookup failed: ${queryError.message}`);
+            }
 
-    // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
-    let stripeCustomerId: string | undefined;
-    if (existingSupabaseCustomer?.stripe_customer_id) {
-        const existingStripeCustomer = await stripe.customers.retrieve(
-            existingSupabaseCustomer.stripe_customer_id
-        );
-        stripeCustomerId = existingStripeCustomer.id;
-    } else {
-        // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
-        const stripeCustomers = await stripe.customers.list({ email: email });
-        stripeCustomerId =
-            stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
-    }
-
-    // If still no stripeCustomerId, create a new customer in Stripe
-    const stripeIdToInsert = stripeCustomerId
-        ? stripeCustomerId
-        : await createCustomerInStripe(uuid, email, referral);
-    if (!stripeIdToInsert) throw new Error('Stripe customer creation failed.');
-
-    if (existingSupabaseCustomer && stripeCustomerId) {
-        // If Supabase has a record but doesn't match Stripe, update Supabase record
-        if (existingSupabaseCustomer.stripe_customer_id !== stripeCustomerId) {
-            const { error: updateError } = await supabaseAdmin
-                .from('customers')
-                .update({ stripe_customer_id: stripeCustomerId })
-                .eq('id', uuid);
-
-            if (updateError)
-                throw new Error(
-                    `Supabase customer record update failed: ${updateError.message}`
+            // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
+            let stripeCustomerId: string | undefined;
+            if (existingSupabaseCustomer?.stripe_customer_id) {
+                const existingStripeCustomer = await stripe.customers.retrieve(
+                    existingSupabaseCustomer.stripe_customer_id
                 );
-            console.warn(
-                `Supabase customer record mismatched Stripe ID. Supabase record updated.`
-            );
+                stripeCustomerId = existingStripeCustomer.id;
+            } else {
+                // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
+                const stripeCustomers = await stripe.customers.list({ email: email });
+                stripeCustomerId =
+                    stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
+            }
+
+            // If still no stripeCustomerId, create a new customer in Stripe
+            const stripeIdToInsert = stripeCustomerId
+                ? stripeCustomerId
+                : await createCustomerInStripe(uuid, email, referral);
+            if (!stripeIdToInsert) throw new Error('Stripe customer creation failed.');
+
+            if (existingSupabaseCustomer && stripeCustomerId) {
+                // If Supabase has a record but doesn't match Stripe, update Supabase record
+                if (existingSupabaseCustomer.stripe_customer_id !== stripeCustomerId) {
+                    const { error: updateError } = await supabaseAdmin
+                        .from('customers')
+                        .update({ stripe_customer_id: stripeCustomerId })
+                        .eq('id', uuid);
+
+                    if (updateError)
+                        throw new Error(
+                            `Supabase customer record update failed: ${updateError.message}`
+                        );
+                    console.warn(
+                        `Supabase customer record mismatched Stripe ID. Supabase record updated.`
+                    );
+                }
+                // If Supabase has a record and matches Stripe, return Stripe customer ID
+                return stripeCustomerId;
+            } else {
+                console.warn(
+                    `Supabase customer record was missing. A new record was created.`
+                );
+
+                // If Supabase has no record, create a new record and return Stripe customer ID
+                const upsertedStripeCustomer = await upsertCustomerToSupabase(
+                    uuid,
+                    stripeIdToInsert
+                );
+                if (!upsertedStripeCustomer)
+                    throw new Error('Supabase customer record creation failed.');
+
+                return upsertedStripeCustomer;
+            }
         }
-        // If Supabase has a record and matches Stripe, return Stripe customer ID
-        return stripeCustomerId;
-    } else {
-        console.warn(
-            `Supabase customer record was missing. A new record was created.`
-        );
-
-        // If Supabase has no record, create a new record and return Stripe customer ID
-        const upsertedStripeCustomer = await upsertCustomerToSupabase(
-            uuid,
-            stripeIdToInsert
-        );
-        if (!upsertedStripeCustomer)
-            throw new Error('Supabase customer record creation failed.');
-
-        return upsertedStripeCustomer;
-    }
+    );
 };
 
 /**
@@ -212,9 +231,32 @@ const copyBillingDetailsToCustomer = async (
     //Todo: check this assertion
     const customer = payment_method.customer as string;
     const { name, phone, address } = payment_method.billing_details;
-    if (!name || !phone || !address) return;
-    //@ts-ignore
-    await stripe.customers.update(customer, { name, phone, address });
+
+    if (!name || !phone || !address) {
+        console.log('Billing details incomplete, skipping update');
+        return;
+    }
+
+    // ✅ SECURITY: Validate billing details to prevent injection attacks
+    const validated = validateBillingDetails({ name, phone, address });
+
+    if (!validated) {
+        console.error('❌ Billing details validation failed, skipping update');
+        return;
+    }
+
+    try {
+        await stripe.customers.update(customer, {
+            name: validated.name,
+            phone: validated.phone,
+            address: validated.address
+        });
+
+        console.log(`✅ Billing details updated for customer ${customer}`);
+    } catch (error) {
+        console.error('❌ Failed to update customer billing details:', error);
+        // Ne pas throw - ce n'est pas critique
+    }
 };
 
 const manageSubscriptionStatusChange = async (
@@ -241,7 +283,11 @@ const manageSubscriptionStatusChange = async (
     const subscriptionData: TablesInsert<'subscriptions'> = {
         id: subscription.id,
         user_id: uuid,
-        metadata: subscription.metadata,
+        // ✅ SECURITY: Validate metadata to prevent XSS/injection attacks
+        metadata: validateStripeMetadata(subscription.metadata, {
+            source: 'subscription',
+            id: subscription.id
+        }),
         status: subscription.status,
         price_id: subscription.items.data[0].price.id,
         //TODO check quantity on subscription

@@ -14,6 +14,10 @@ import { detectIPSpoofing, analyzeRateLimitBypass } from '@/utils/security-monit
 // Force dynamic rendering - don't statically analyze during build
 export const dynamic = 'force-dynamic';
 
+// ✅ SECURITY: Limit webhook payload size to prevent DoS attacks
+// 1MB is more than sufficient for Stripe webhooks (typically < 50KB)
+const MAX_WEBHOOK_SIZE = 1024 * 1024; // 1 MB
+
 // Log rate limiting mode on first load
 if (typeof window === 'undefined') {
   const mode = getRateLimitMode();
@@ -38,6 +42,23 @@ const relevantEvents = new Set([
 ]);
 
 export async function POST(req: Request) {
+  // ✅ SECURITY: Check payload size BEFORE reading body to prevent DoS
+  const contentLength = req.headers.get('content-length');
+
+  if (contentLength && parseInt(contentLength) > MAX_WEBHOOK_SIZE) {
+    console.error('❌ Webhook payload too large:', contentLength);
+
+    const identifier = getClientIdentifier(req);
+    SecurityLogger.logSuspiciousActivity({
+      ip: identifier,
+      activity: 'OVERSIZED_WEBHOOK',
+      details: { size: contentLength },
+      path: '/api/webhooks',
+    });
+
+    return new Response('Payload too large', { status: 413 });
+  }
+
   // ✅ SECURITY: Detect IP spoofing attempts
   const forwardedFor = req.headers.get('x-forwarded-for');
   const realIp = req.headers.get('x-real-ip');
@@ -82,6 +103,21 @@ export async function POST(req: Request) {
   }
 
   const body = await req.text();
+
+  // ✅ SECURITY: Double-check body size after reading
+  if (body.length > MAX_WEBHOOK_SIZE) {
+    console.error('❌ Webhook body exceeds limit after reading:', body.length);
+
+    SecurityLogger.logSuspiciousActivity({
+      ip: identifier,
+      activity: 'OVERSIZED_WEBHOOK_BODY',
+      details: { actualSize: body.length },
+      path: '/api/webhooks',
+    });
+
+    return new Response('Payload too large', { status: 413 });
+  }
+
   const sig = req.headers.get('stripe-signature') as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   let event: Stripe.Event;
