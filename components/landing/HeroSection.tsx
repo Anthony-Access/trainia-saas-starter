@@ -32,12 +32,12 @@ export function HeroSection() {
             className="mx-auto max-w-5xl text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl"
           >
             Gagnez vos{' '}
-            <span className="relative inline-block px-3">
+            <span className="relative inline-block px-2">
               <span className="relative z-10 text-white">marchés</span>
-              {/* SVG Brush stroke effect */}
+              {/* SVG Brush stroke effect - couvre tout le mot */}
               <svg
-                className="absolute inset-0 w-full h-full"
-                viewBox="0 0 250 80"
+                className="absolute inset-0 w-full h-full -left-2 -right-2"
+                viewBox="0 0 200 100"
                 preserveAspectRatio="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -49,7 +49,7 @@ export function HeroSection() {
                   </linearGradient>
                 </defs>
                 <path
-                  d="M10,40 Q30,20 60,30 T120,35 Q160,38 200,25 T240,40 L245,55 Q200,65 160,58 T100,52 Q60,55 30,60 T10,55 Z"
+                  d="M5,25 Q20,15 45,22 T95,28 Q140,32 175,22 T195,30 L198,70 Q175,80 140,72 T95,68 Q45,75 20,78 T5,68 Z"
                   fill="url(#brushGradient)"
                   opacity="0.95"
                 />
