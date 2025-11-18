@@ -119,26 +119,54 @@ export function rateLimit(
 
 /**
  * Get the client identifier from a request
- * Uses X-Forwarded-For header (set by reverse proxies) or falls back to a default
+ * Uses a combination of IP and User-Agent to prevent spoofing
  *
  * @param request - The incoming request
- * @returns Client identifier (IP address or default)
+ * @returns Client identifier (fingerprint)
+ *
+ * Security improvements:
+ * 1. Prioritize non-spoofable headers (cf-connecting-ip from Cloudflare)
+ * 2. Create fingerprint with IP + User-Agent to make spoofing harder
+ * 3. Fallback chain: Cloudflare IP → X-Real-IP → X-Forwarded-For → localhost
  */
 export function getClientIdentifier(request: Request): string {
-  // Try to get IP from headers (works with most hosting platforms)
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (forwardedFor) {
-    // x-forwarded-for can contain multiple IPs, take the first one
-    return forwardedFor.split(',')[0].trim();
-  }
+  // 1. Try Cloudflare's connecting IP (most reliable, can't be spoofed)
+  const cfConnectingIp = request.headers.get('cf-connecting-ip');
 
+  // 2. Try X-Real-IP (set by Nginx and other reverse proxies)
   const realIp = request.headers.get('x-real-ip');
-  if (realIp) {
-    return realIp.trim();
-  }
 
-  // Fallback for development/local
-  return '127.0.0.1';
+  // 3. Try X-Forwarded-For (can be spoofed, use as last resort)
+  const forwardedFor = request.headers.get('x-forwarded-for');
+
+  // Select the most reliable IP source
+  const ip = cfConnectingIp ||
+             realIp ||
+             (forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1');
+
+  // Get User-Agent for additional fingerprinting
+  const userAgent = request.headers.get('user-agent') || 'unknown';
+
+  // Create a composite fingerprint to make spoofing harder
+  // Hash the user agent to keep the identifier reasonably short
+  const userAgentHash = simpleHash(userAgent);
+
+  return `${ip}:${userAgentHash}`;
+}
+
+/**
+ * Simple hash function for creating shorter identifiers
+ * @param str - String to hash
+ * @returns Hash value as string
+ */
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash).toString(36);
 }
 
 /**

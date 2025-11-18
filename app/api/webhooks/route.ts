@@ -9,6 +9,7 @@ import {
 } from '@/utils/supabase/admin';
 import { rateLimitWebhook, getClientIdentifier, getRateLimitMode } from '@/utils/rate-limit-distributed';
 import { SecurityLogger } from '@/utils/security-logger';
+import { detectIPSpoofing, analyzeRateLimitBypass } from '@/utils/security-monitor';
 
 // Force dynamic rendering - don't statically analyze during build
 export const dynamic = 'force-dynamic';
@@ -37,6 +38,19 @@ const relevantEvents = new Set([
 ]);
 
 export async function POST(req: Request) {
+  // ✅ SECURITY: Detect IP spoofing attempts
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  const realIp = req.headers.get('x-real-ip');
+  const userAgent = req.headers.get('user-agent');
+
+  if (detectIPSpoofing(forwardedFor, realIp, userAgent)) {
+    console.warn('⚠️  Suspicious IP spoofing detected', {
+      forwardedFor,
+      realIp,
+      userAgent,
+    });
+  }
+
   // Rate limiting: Allow 50 webhook calls per minute per IP
   // Uses distributed Redis if configured, otherwise falls back to in-memory
   // This prevents abuse while allowing legitimate high-volume webhook processing
@@ -46,13 +60,15 @@ export async function POST(req: Request) {
   if (!rateLimitResult.success) {
     console.warn(`⚠️  Rate limit exceeded for ${identifier}`);
 
-    // ✅ SECURITY: Log rate limit violation
+    // ✅ SECURITY: Log rate limit violation and analyze bypass attempts
     SecurityLogger.logRateLimitExceeded({
       identifier,
       endpoint: '/api/webhooks',
       limit: 50,
       ip: identifier,
     });
+
+    analyzeRateLimitBypass(identifier, true);
 
     return new Response('Too Many Requests', {
       status: 429,

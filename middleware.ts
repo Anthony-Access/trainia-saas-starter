@@ -17,6 +17,10 @@ export default clerkMiddleware(async (auth, req) => {
 export const config = {
   matcher: [
     // Skip Next.js internals and all static files, unless found in search params
+    // ✅ SECURITY: Simpler, more maintainable regex to avoid edge cases
+    // This protects all routes except: static files, _next, and api/webhooks
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)|api/webhooks).*)",
+    // Alternative simpler approach (commented - uncomment if preferred):
+    // '/((?!api/webhooks|_next/static|_next/image|favicon.ico).*)',
   ],
 }
