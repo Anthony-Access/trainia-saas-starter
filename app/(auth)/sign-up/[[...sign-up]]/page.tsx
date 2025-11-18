@@ -6,10 +6,10 @@ export default function SignUpPage() {
       <div className="w-full max-w-md">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Join Train-IA
+            Rejoignez Memo-IA
           </h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Create your account and start automating today
+            Créez votre compte et commencez à générer vos documents
           </p>
         </div>
         <div className="mt-8">

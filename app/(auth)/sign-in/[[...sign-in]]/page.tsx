@@ -6,10 +6,10 @@ export default function SignInPage() {
       <div className="w-full max-w-md">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Welcome to Train-IA
+            Bienvenue sur Memo-IA
           </h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Sign in to your account to continue
+            Connectez-vous pour accéder à votre compte
           </p>
         </div>
         <div className="mt-8">

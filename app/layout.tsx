@@ -24,8 +24,8 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Train-IA - Automate Your Business Processes',
-  description: 'Transform your company with AI. Eliminate repetitive tasks, optimize your processes and save time with AI and automation.',
+  title: 'Memo-IA - Génération Automatique d\'Appels d\'Offres et Mémoires Techniques',
+  description: 'Générez automatiquement vos appels d\'offres et mémoires techniques grâce à l\'intelligence artificielle. Gagnez du temps et améliorez la qualité de vos réponses.',
 }
 
 export default function RootLayout({

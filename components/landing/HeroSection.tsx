@@ -20,7 +20,7 @@ export function HeroSection() {
           >
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 dark:bg-blue-900/30 dark:text-blue-200">
               <Sparkles className="h-4 w-4" />
-              AI-Powered Business Automation
+              Génération Automatique par IA
             </div>
           </motion.div>
 
@@ -30,7 +30,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mx-auto max-w-5xl text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl"
           >
-            AUTOMATE YOUR BUSINESS PROCESSES
+            GÉNÉREZ VOS APPELS D'OFFRES ET MÉMOIRES TECHNIQUES
           </motion.h1>
 
           <motion.h2
@@ -39,7 +39,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mx-auto mt-6 max-w-3xl text-2xl font-semibold text-blue-600 dark:text-blue-400 sm:text-3xl"
           >
-            Transform your company with AI
+            Automatisez la création de vos réponses aux marchés publics
           </motion.h2>
 
           <motion.p
@@ -48,7 +48,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-gray-300"
           >
-            Eliminate repetitive tasks, optimize your processes and save time with AI and automation.
+            L'intelligence artificielle au service de vos appels d'offres. Créez des mémoires techniques de qualité en quelques minutes.
           </motion.p>
 
           <motion.div

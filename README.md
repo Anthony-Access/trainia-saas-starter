@@ -1,9 +1,6 @@
-[![CodeGuide](/codeguide-backdrop.svg)](https://codeguide.dev)
+# Memo-IA
 
-
-# CodeGuide Starter Pro
-
-A modern web application starter template built with Next.js 14, featuring authentication, database integration, and payment processing capabilities.
+Plateforme de génération automatique d'appels d'offres et mémoires techniques propulsée par l'intelligence artificielle. Application web moderne construite avec Next.js 14, incluant l'authentification, l'intégration de base de données et le traitement des paiements.
 
 ## Tech Stack
 
@@ -28,7 +25,7 @@ Before you begin, ensure you have the following:
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd codeguide-starter-pro
+   cd memo-ia
    ```
 
 2. **Install dependencies**
@@ -96,27 +93,29 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 ```
 
-## Features
+## Fonctionnalités
 
-- 🔐 Authentication with Clerk
-- 📦 Supabase Database
-- 💳 Stripe Payments Integration
-- 🎨 Modern UI with Tailwind CSS
-- 🚀 App Router Ready
-- 🔄 Real-time Updates
-- 📱 Responsive Design
+- 🔐 Authentification avec Clerk
+- 📦 Base de données Supabase
+- 💳 Intégration des paiements Stripe
+- 🎨 Interface moderne avec Tailwind CSS
+- 🚀 Next.js App Router
+- 📝 Génération automatique de mémoires techniques
+- 📋 Création d'appels d'offres personnalisés
+- 🤖 Intelligence artificielle intégrée
+- 📱 Design responsive
 
 ## Project Structure
 
 ```
-codeguide-starter/
-├── app/                # Next.js app router pages
-├── components/         # React components
-├── utils/             # Utility functions
-├── public/            # Static assets
-├── styles/            # Global styles
-├── documentation/     # Generated documentation from CodeGuide
-└── supabase/          # Supabase configurations and migrations
+memo-ia/
+├── app/                # Pages Next.js app router
+├── components/         # Composants React
+├── utils/             # Fonctions utilitaires
+├── public/            # Assets statiques
+├── styles/            # Styles globaux
+├── documentation/     # Documentation du projet
+└── supabase/          # Configurations Supabase
 ```
 
 ## Documentation Setup
