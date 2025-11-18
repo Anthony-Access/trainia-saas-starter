@@ -9,6 +9,9 @@ import {
 } from '@/utils/supabase/admin';
 import { rateLimit, getClientIdentifier } from '@/utils/rate-limit';
 
+// Force dynamic rendering - don't statically analyze during build
+export const dynamic = 'force-dynamic';
+
 const relevantEvents = new Set([
   'product.created',
   'product.updated',
@@ -56,9 +59,9 @@ export async function POST(req: Request) {
     }
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
-  } catch (err: any) {
+  } catch (err) {
     console.error(`❌ Webhook signature verification failed:`, {
-      error: err.message,
+      error: err instanceof Error ? err.message : 'Unknown error',
       hasSignature: !!sig,
       hasSecret: !!webhookSecret
     });

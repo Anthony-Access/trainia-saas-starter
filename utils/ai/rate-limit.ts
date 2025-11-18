@@ -49,8 +49,8 @@ export async function checkOpenAIRateLimit(userId: string): Promise<RateLimitRes
   today.setHours(0, 0, 0, 0)
 
   try {
-    // Sum all tokens used today
-    const { data: usageData, error } = await supabaseAdmin
+    // Sum all tokens used today (ai_usage table created by migration)
+    const { data: usageData, error } = await (supabaseAdmin as any)
       .from('ai_usage')
       .select('tokens_used')
       .eq('user_id', userId)
@@ -68,7 +68,7 @@ export async function checkOpenAIRateLimit(userId: string): Promise<RateLimitRes
     }
 
     const dailyLimit = 100000
-    const tokensUsed = usageData?.reduce((sum, row) => sum + (row.tokens_used || 0), 0) || 0
+    const tokensUsed = usageData?.reduce((sum: number, row: any) => sum + (row.tokens_used || 0), 0) || 0
 
     if (tokensUsed >= dailyLimit) {
       const tomorrow = new Date(today)
@@ -115,7 +115,7 @@ export async function trackOpenAIUsage(
   const cost = tokensUsed * costPerToken
 
   try {
-    const { error } = await supabaseAdmin.from('ai_usage').insert({
+    const { error } = await (supabaseAdmin as any).from('ai_usage').insert({
       user_id: userId,
       tokens_used: tokensUsed,
       cost_usd: cost,
@@ -172,7 +172,7 @@ export async function getUserAIUsage(userId: string, days: number = 30) {
   startDate.setDate(startDate.getDate() - days)
 
   try {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('ai_usage')
       .select('*')
       .eq('user_id', userId)
@@ -184,8 +184,8 @@ export async function getUserAIUsage(userId: string, days: number = 30) {
       return null
     }
 
-    const totalTokens = data?.reduce((sum, row) => sum + row.tokens_used, 0) || 0
-    const totalCost = data?.reduce((sum, row) => sum + row.cost_usd, 0) || 0
+    const totalTokens = data?.reduce((sum: number, row: any) => sum + row.tokens_used, 0) || 0
+    const totalCost = data?.reduce((sum: number, row: any) => sum + row.cost_usd, 0) || 0
     const requestCount = data?.length || 0
 
     return {

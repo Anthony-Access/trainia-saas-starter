@@ -205,7 +205,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {quickActions.map((action, index) => (
+                {quickActions.map((action) => (
                   <div
                     key={action.title}
                     className="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700"

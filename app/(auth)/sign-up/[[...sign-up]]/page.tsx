@@ -21,7 +21,6 @@ export default function SignUpPage() {
               }
             }}
             redirectUrl="/dashboard"
-            forceRedirectUrl={false}
             signInUrl="/sign-in"
             fallbackRedirectUrl="/dashboard"
           />
