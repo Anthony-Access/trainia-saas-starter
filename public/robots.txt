@@ -1,0 +1,14 @@
+# robots.txt pour Memo-IA
+User-agent: *
+Allow: /
+
+# Pages à exclure du crawl
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /sign-in/
+Disallow: /sign-up/
+Disallow: /_next/
+Disallow: /static/
+
+# Sitemap
+Sitemap: https://memo-ia.fr/sitemap.xml
