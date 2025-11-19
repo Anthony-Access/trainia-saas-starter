@@ -80,7 +80,7 @@ export function TestimonialsSection() {
             Ils nous font confiance
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-            Découvrez comment Memo-IA transforme le quotidien de centaines d'entreprises
+            Découvrez comment Memo-IA transforme le quotidien de centaines d&apos;entreprises
           </p>
         </motion.div>
 
@@ -135,7 +135,7 @@ export function TestimonialsSection() {
 
                 {/* Content */}
                 <p className="mb-4 text-gray-700 dark:text-gray-300">
-                  "{testimonial.content}"
+                  &quot;{testimonial.content}&quot;
                 </p>
 
                 {/* Highlight */}
@@ -176,7 +176,7 @@ export function TestimonialsSection() {
           className="mt-16 text-center"
         >
           <p className="text-gray-600 dark:text-gray-400">
-            Rejoignez des centaines d'entreprises qui gagnent plus de marchés{' '}
+            Rejoignez des centaines d&apos;entreprises qui gagnent plus de marchés{' '}
             <span className="font-semibold text-purple-600 dark:text-purple-400">
               avec Memo-IA
             </span>

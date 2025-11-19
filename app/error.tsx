@@ -27,11 +27,11 @@ export default function Error({
 
           {/* Error message */}
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Une erreur s'est produite
+            Une erreur s&apos;est produite
           </h2>
 
           <p className="text-gray-600 dark:text-gray-400">
-            Désolé, quelque chose s'est mal passé. Veuillez réessayer.
+            Désolé, quelque chose s&apos;est mal passé. Veuillez réessayer.
           </p>
 
           {/* Error details (development only) */}
@@ -47,7 +47,7 @@ export default function Error({
               Réessayer
             </Button>
             <Button variant="outline" onClick={() => window.location.href = '/'}>
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Button>
           </div>
         </div>
