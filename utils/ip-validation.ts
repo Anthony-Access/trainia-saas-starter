@@ -45,7 +45,7 @@ export function isValidIPFormat(ip: string): boolean {
  * @returns Client IP address or 'unknown'
  */
 export function getClientIP(req: Request | { headers: Headers }): string {
-  const headers = 'headers' in req ? req.headers : req.headers;
+  const headers = req.headers;
 
   const cfIp = headers.get('cf-connecting-ip');
   const realIp = headers.get('x-real-ip');
@@ -97,7 +97,7 @@ export function detectIPSpoofing(req: Request | { headers: Headers }): {
   reason?: string;
   details?: Record<string, string | null>;
 } {
-  const headers = 'headers' in req ? req.headers : req.headers;
+  const headers = req.headers;
 
   const cfIp = headers.get('cf-connecting-ip');
   const realIp = headers.get('x-real-ip');
@@ -172,7 +172,7 @@ export function createIPFingerprint(
   additionalFactors: string[] = []
 ): string {
   const ip = getClientIP(req);
-  const headers = 'headers' in req ? req.headers : req.headers;
+  const headers = req.headers;
 
   const userAgent = headers.get('user-agent') || '';
   const acceptLanguage = headers.get('accept-language') || '';
