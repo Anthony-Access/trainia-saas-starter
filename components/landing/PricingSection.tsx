@@ -23,8 +23,7 @@ const plans = [
       { text: "Support par email", included: true },
       { text: "Personnalisation avancée", included: false },
       { text: "Bibliothèque de modèles premium", included: false },
-      { text: "Support prioritaire", included: false },
-      { text: "API & Intégrations", included: false },
+      { text: "Support prioritaire (réponse < 48h)", included: false },
     ],
     cta: "Commencer l'essai gratuit",
     highlight: "border-gray-200 dark:border-gray-700"
@@ -44,33 +43,29 @@ const plans = [
       { text: "Export PDF professionnel", included: true },
       { text: "Personnalisation avancée (charte graphique)", included: true },
       { text: "Bibliothèque de modèles premium", included: true },
-      { text: "Collaboration d'équipe", included: true },
-      { text: "Support prioritaire (réponse < 4h)", included: true },
-      { text: "API & Intégrations", included: false },
+      { text: "Support prioritaire (réponse < 48h)", included: true },
     ],
     cta: "Démarrer maintenant",
     highlight: "border-purple-500 dark:border-purple-400"
   },
   {
     name: "Enterprise",
-    description: "Solution sur mesure pour grandes entreprises",
-    price: "Sur mesure",
-    period: "",
+    description: "Pour les grandes entreprises",
+    price: "249",
+    period: "/mois",
     trial: null,
     icon: Building2,
     popular: false,
     features: [
-      { text: "Mémoires techniques illimités", included: true },
+      { text: "50 mémoires techniques par mois", included: true },
       { text: "Génération automatique de contenu", included: true },
-      { text: "IA personnalisée pour votre secteur", included: true },
       { text: "Export multi-formats (PDF, Word, etc.)", included: true },
       { text: "Personnalisation complète", included: true },
       { text: "Bibliothèque de modèles illimitée", included: true },
-      { text: "Collaboration d'équipe avancée", included: true },
+      { text: "Support prioritaire (réponse < 24h)", included: true },
       { text: "Account manager dédié", included: true },
-      { text: "API & Intégrations sur mesure", included: true },
     ],
-    cta: "Contactez-nous",
+    cta: "Démarrer maintenant",
     highlight: "border-gray-200 dark:border-gray-700"
   }
 ]
@@ -120,7 +115,7 @@ export function PricingSection() {
               )}
 
               <Card
-                className={`h-full border-2 ${plan.highlight} bg-white/80 backdrop-blur-sm dark:bg-gray-900/80 transition-all duration-300 hover:shadow-2xl ${
+                className={`h-full flex flex-col border-2 ${plan.highlight} bg-white/80 backdrop-blur-sm dark:bg-gray-900/80 transition-all duration-300 hover:shadow-2xl ${
                   plan.popular
                     ? 'hover:shadow-purple-500/20 dark:hover:shadow-purple-500/30'
                     : 'hover:shadow-purple-500/10 dark:hover:shadow-purple-500/20'
@@ -195,7 +190,7 @@ export function PricingSection() {
                   </div>
                 </CardContent>
 
-                <CardFooter>
+                <CardFooter className="mt-auto">
                   <Link href="/sign-up" className="w-full">
                     <Button
                       size="lg"
