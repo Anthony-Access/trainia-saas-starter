@@ -14,7 +14,7 @@ export function CTASection() {
   ]
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-purple-100 to-blue-100 dark:from-purple-900 via-blue-900 dark:to-slate-800">
+    <section className="relative overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-slate-50 dark:from-slate-900 dark:via-slate-850 dark:to-gray-800">
       {/* Grille en arrière-plan cohérente avec les autres sections */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_40%,transparent_100%)]" />
 

@@ -33,7 +33,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="relative py-24 sm:py-32 bg-gradient-to-br from-slate-100 via-blue-100 to-blue-50 dark:from-slate-900 via-slate-850 dark:to-blue-900 overflow-hidden">
+    <section className="relative py-24 sm:py-32 bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 dark:from-slate-900 dark:via-slate-850 dark:to-slate-800 overflow-hidden">
       {/* Grille en arrière-plan avec effet mask */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_40%,transparent_100%)]" />
 
