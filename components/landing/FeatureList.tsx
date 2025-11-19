@@ -2,7 +2,7 @@
 "use client"
 
 import { motion } from 'framer-motion'
-import { Clock, Target, CheckCircle, FileText, Zap, Globe, ArrowUpRight } from 'lucide-react'
+import { Clock, Target, CheckCircle, FileText, Zap, Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const features = [
@@ -65,7 +65,7 @@ export function FeatureList() {
               </p>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 Une suite d&apos;outils complète conçue pour les entreprises qui veulent passer à la vitesse supérieure.
-                Générez vos mémoires techniques en un temps record et concentrez-vous sur l'essentiel : votre expertise.
+                Générez vos mémoires techniques en un temps record et concentrez-vous sur l&apos;essentiel : votre expertise.
               </p>
             </div>
 
@@ -121,7 +121,6 @@ export function FeatureList() {
                 viewport={{ once: true }}
                 className={cn(
                   "group relative overflow-hidden rounded-2xl border border-border bg-card p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1",
-                  // Remove specific col-spans to keep grid uniform
                 )}
               >
                 <div className="mb-4">
