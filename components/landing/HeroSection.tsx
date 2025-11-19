@@ -15,7 +15,7 @@ export function HeroSection() {
         .brush-highlight {
           position: relative;
           display: inline-block;
-          padding: 0.05em 0.2em;
+          padding: 0.02em 0.15em;
           z-index: 1;
         }
 
@@ -25,8 +25,8 @@ export function HeroSection() {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(-1deg);
-          width: calc(100% + 12px);
-          height: 102%;
+          width: calc(100% + 8px);
+          height: 100%;
           background: linear-gradient(120deg, #A855F7 0%, #D946EF 50%, #EC4899 100%);
           border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
           z-index: 0;
