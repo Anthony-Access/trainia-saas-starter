@@ -49,7 +49,7 @@ export function HeroSection() {
         }
       `}</style>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+      <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pb-32">
         <div className="text-center">
           {/* Tag accroche */}
           <motion.div
