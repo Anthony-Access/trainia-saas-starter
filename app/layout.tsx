@@ -39,7 +39,7 @@ export default function RootLayout({
         <ClerkClientProvider>
           <TanstackClientProvider>
             <Header />
-            <main>{children}</main>
+            <main className="-mt-px">{children}</main>
           </TanstackClientProvider>
         </ClerkClientProvider>
       </body>
