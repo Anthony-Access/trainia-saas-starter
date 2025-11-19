@@ -90,7 +90,7 @@ export function HowItWorks() {
                   <div className="relative flex items-start gap-4">
                     {/* Icône avec gradient */}
                     <div className="flex-shrink-0 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <step.icon className="h-7 w-7 text-white" strokeWidth={2.5} />
+                      <step.icon className="h-7 w-7 text-white" strokeWidth={2.5} aria-hidden="true" />
                     </div>
 
                     <div className="flex-1">

@@ -70,12 +70,12 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mx-auto max-w-6xl text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl lg:text-8xl"
           >
-            <div className="leading-tight">Gagnez vos</div>
-            <div className="leading-tight">
+            <span className="block leading-tight">Gagnez vos</span>
+            <span className="block leading-tight">
               <span className="brush-highlight">
                 <span className="text-white">marchés</span>
               </span> avec l&apos;IA
-            </div>
+            </span>
           </motion.h1>
 
           {/* Description */}
@@ -103,7 +103,7 @@ export function HeroSection() {
               >
                 Démarrer gratuitement
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 transition-transform group-hover:scale-110">
-                  <ArrowRight className="h-4 w-4 text-white" />
+                  <ArrowRight className="h-4 w-4 text-white" aria-hidden="true" />
                 </span>
               </Button>
             </Link>

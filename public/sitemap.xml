@@ -31,4 +31,33 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Pages légales -->
+  <url>
+    <loc>https://memo-ia.fr/legal/terms</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://memo-ia.fr/legal/privacy</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://memo-ia.fr/legal/mentions</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://memo-ia.fr/legal/cookies</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
