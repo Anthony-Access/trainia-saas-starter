@@ -1,11 +1,10 @@
 /**
  * Distributed Rate Limiting with Upstash Redis
  *
- * This module provides enterprise-grade rate limiting that works across
- * multiple server instances using Upstash Redis.
+ * Enterprise-grade rate limiting that works across multiple server instances.
  *
  * Features:
- * - Distributed rate limiting (works with multiple instances)
+ * - Distributed (works with multiple instances)
  * - Automatic fallback to in-memory if Redis is not configured
  * - Sliding window algorithm for accurate rate limiting
  * - Analytics and abuse detection
@@ -19,19 +18,9 @@
  * 4. Install: npm install @upstash/ratelimit @upstash/redis
  */
 
-import { rateLimit as inMemoryRateLimit, getClientIdentifier } from './rate-limit';
-
-// Type definitions
-interface RateLimitResult {
-  success: boolean;
-  remaining: number;
-  resetIn: number;
-}
-
-interface RateLimitConfig {
-  limit: number;
-  windowInSeconds: number;
-}
+import type { RateLimitConfig, RateLimitResult } from './types';
+import { normalizeConfig } from './core';
+import { inMemoryRateLimit } from './in-memory';
 
 // Check if Upstash Redis is configured
 const isRedisConfigured = () => {
@@ -45,28 +34,54 @@ const isRedisConfigured = () => {
  * Lazy load Upstash modules only if Redis is configured
  * This prevents errors during build when dependencies are not installed
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let Ratelimit: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let Redis: any;
-let ratelimitInstance: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ratelimitCache = new Map<string, any>();
 
-async function initializeRedis() {
-  if (!isRedisConfigured()) {
-    return null;
-  }
-
+async function loadOptionalDeps() {
   try {
-    // Load optional dependencies using eval to bypass webpack
-    const { loadUpstashRatelimit, loadUpstashRedis } = await import('./optional-deps');
+    // Dynamic import to avoid build errors
+    const { loadUpstashRatelimit, loadUpstashRedis } = await import('@/lib/optional-deps');
     const ratelimitModule = await loadUpstashRatelimit();
     const redisModule = await loadUpstashRedis();
 
     if (!ratelimitModule || !redisModule) {
-      console.warn('⚠️  Upstash packages not installed, falling back to in-memory rate limiting');
       return null;
     }
 
     Ratelimit = ratelimitModule.Ratelimit;
     Redis = redisModule.Redis;
+
+    return { Ratelimit, Redis };
+  } catch {
+    return null;
+  }
+}
+
+async function getRatelimiter(config: RateLimitConfig, prefix: string = 'ratelimit') {
+  if (!isRedisConfigured()) {
+    return null;
+  }
+
+  const normalizedConfig = normalizeConfig(config);
+  const cacheKey = `${prefix}:${normalizedConfig.limit}:${normalizedConfig.windowInSeconds}`;
+
+  // Return cached instance if available
+  if (ratelimitCache.has(cacheKey)) {
+    return ratelimitCache.get(cacheKey);
+  }
+
+  try {
+    const deps = await loadOptionalDeps();
+    if (!deps) {
+      console.warn('⚠️  Upstash packages not installed, falling back to in-memory rate limiting');
+      return null;
+    }
+
+    const { Ratelimit, Redis } = deps;
 
     // Create Redis client
     const redis = new Redis({
@@ -75,27 +90,25 @@ async function initializeRedis() {
     });
 
     // Create rate limiter with sliding window
-    ratelimitInstance = new Ratelimit({
+    const ratelimiter = new Ratelimit({
       redis,
-      limiter: Ratelimit.slidingWindow(50, '60 s'), // 50 requests per minute
-      analytics: true, // Enable analytics for abuse detection
-      prefix: 'ratelimit:webhook',
+      limiter: Ratelimit.slidingWindow(
+        normalizedConfig.limit,
+        `${normalizedConfig.windowInSeconds} s`
+      ),
+      analytics: true,
+      prefix,
     });
 
-    console.log('✅ Distributed rate limiting enabled (Upstash Redis)');
-    return ratelimitInstance;
+    // Cache the instance
+    ratelimitCache.set(cacheKey, ratelimiter);
+
+    return ratelimiter;
   } catch (error) {
     console.warn('⚠️  Failed to initialize Upstash Redis, falling back to in-memory rate limiting');
     console.warn('   Error:', error instanceof Error ? error.message : 'Unknown error');
-    console.warn('   Install packages: npm install @upstash/ratelimit @upstash/redis');
     return null;
   }
-}
-
-// Initialize on module load (server-side only)
-let redisInitPromise: Promise<any> | null = null;
-if (typeof window === 'undefined' && isRedisConfigured()) {
-  redisInitPromise = initializeRedis();
 }
 
 /**
@@ -103,16 +116,30 @@ if (typeof window === 'undefined' && isRedisConfigured()) {
  *
  * @param identifier - Unique identifier (IP address, user ID, etc.)
  * @param config - Rate limit configuration
+ * @param prefix - Redis key prefix for categorizing rate limits
  * @returns Rate limit result
+ *
+ * @example
+ * ```typescript
+ * const result = await distributedRateLimit('192.168.1.1', {
+ *   limit: 50,
+ *   windowInSeconds: 60
+ * });
+ *
+ * if (!result.success) {
+ *   return new Response('Too Many Requests', { status: 429 });
+ * }
+ * ```
  */
 export async function distributedRateLimit(
   identifier: string,
-  config: RateLimitConfig = { limit: 50, windowInSeconds: 60 }
+  config: RateLimitConfig = { limit: 50, windowInSeconds: 60 },
+  prefix: string = 'ratelimit'
 ): Promise<RateLimitResult> {
-  // If Redis is configured and initialized, use it
-  if (redisInitPromise) {
+  // Try Redis if configured
+  if (isRedisConfigured()) {
     try {
-      const ratelimiter = await redisInitPromise;
+      const ratelimiter = await getRatelimiter(config, prefix);
 
       if (ratelimiter) {
         const { success, limit, remaining, reset } = await ratelimiter.limit(identifier);
@@ -143,67 +170,23 @@ export async function distributedRateLimit(
   }
 
   // Fallback to in-memory rate limiting
-  // This happens if:
-  // - Redis is not configured
-  // - Redis initialization failed
-  // - Redis call failed
   return inMemoryRateLimit(identifier, config);
 }
 
 /**
- * Helper function to rate limit webhooks
- * Uses distributed rate limiting with appropriate limits
- */
-export async function rateLimitWebhook(identifier: string): Promise<RateLimitResult> {
-  return distributedRateLimit(identifier, {
-    limit: 50,
-    windowInSeconds: 60,
-  });
-}
-
-/**
- * Helper function to rate limit API endpoints
- * More restrictive than webhooks
- */
-export async function rateLimitAPI(identifier: string): Promise<RateLimitResult> {
-  return distributedRateLimit(identifier, {
-    limit: 30,
-    windowInSeconds: 60,
-  });
-}
-
-/**
- * Helper function to rate limit authentication endpoints
- * Very restrictive to prevent brute force attacks
- */
-export async function rateLimitAuth(identifier: string): Promise<RateLimitResult> {
-  return distributedRateLimit(identifier, {
-    limit: 5,
-    windowInSeconds: 60,
-  });
-}
-
-/**
  * Get the current rate limiting mode
+ *
+ * @returns 'distributed' if Redis is configured, 'in-memory' otherwise
  */
-export function getRateLimitMode(): 'distributed' | 'in-memory' | 'unknown' {
-  if (typeof window !== 'undefined') {
-    return 'unknown'; // Client-side
-  }
-
-  if (isRedisConfigured()) {
-    return 'distributed';
-  }
-
-  return 'in-memory';
+export function getRateLimitMode(): 'distributed' | 'in-memory' {
+  return isRedisConfigured() ? 'distributed' : 'in-memory';
 }
 
 /**
  * Check if distributed rate limiting is available
+ *
+ * @returns true if Redis is configured
  */
 export function isDistributedRateLimitingEnabled(): boolean {
   return isRedisConfigured();
 }
-
-// Export the client identifier helper
-export { getClientIdentifier };

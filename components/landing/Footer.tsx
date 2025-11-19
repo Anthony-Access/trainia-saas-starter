@@ -104,7 +104,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="#"
+                  href="/legal/terms"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
                   CGU
@@ -112,7 +112,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/legal/privacy"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
                   Confidentialité
@@ -120,10 +120,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/legal/mentions"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
                   Mentions légales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/legal/cookies"
+                  className="text-sm hover:text-white transition-colors duration-200"
+                >
+                  Cookies
                 </Link>
               </li>
             </ul>

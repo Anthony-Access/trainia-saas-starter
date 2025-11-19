@@ -3,7 +3,7 @@
  * Prevents race conditions in customer creation
  */
 
-interface LockOptions {
+export interface LockOptions {
     key: string;
     ttl: number; // seconds
     retryDelay?: number; // milliseconds
@@ -35,7 +35,7 @@ export async function acquireLock(options: LockOptions): Promise<boolean> {
 
     try {
         // Load Redis
-        const { loadUpstashRedis } = await import('./optional-deps');
+        const { loadUpstashRedis } = await import('@/lib/optional-deps');
         const redisModule = await loadUpstashRedis();
 
         if (!redisModule) {
@@ -86,7 +86,7 @@ export async function releaseLock(key: string): Promise<void> {
     if (!isRedisConfigured) return;
 
     try {
-        const { loadUpstashRedis } = await import('./optional-deps');
+        const { loadUpstashRedis } = await import('@/lib/optional-deps');
         const redisModule = await loadUpstashRedis();
 
         if (!redisModule) return;

@@ -7,7 +7,7 @@
  * Security Impact: Prevents misconfiguration vulnerabilities in production
  */
 
-import { SecurityLogger } from './security-logger';
+import { SecurityLogger } from '../monitoring/security-logger';
 
 interface ValidationError {
   variable: string;
