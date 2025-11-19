@@ -10,8 +10,11 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-gradient-to-br from-slate-50/95 to-blue-50/95 backdrop-blur-md dark:from-slate-900/95 dark:to-slate-800/95">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full overflow-hidden bg-gradient-to-br from-slate-50/95 to-blue-50/95 backdrop-blur-md dark:from-slate-900/95 dark:to-slate-800/95">
+      {/* Grid pattern background */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-50" />
+
+      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <Brain className="h-8 w-8 text-blue-600" />
@@ -63,7 +66,7 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden">
+        <div className="relative md:hidden">
           <div className="border-t border-gray-200/50 bg-white/90 px-2 py-4 backdrop-blur-md dark:border-gray-800/50 dark:bg-gray-900/90">
             <div className="space-y-3">
               <SignedOut>
