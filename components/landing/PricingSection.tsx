@@ -128,7 +128,7 @@ export function PricingSection() {
                       ? 'bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500'
                       : 'bg-gradient-to-br from-slate-500 to-blue-500'
                   } shadow-lg`}>
-                    <plan.icon className="h-6 w-6 text-white" />
+                    <plan.icon className="h-6 w-6 text-white" aria-hidden="true" />
                   </div>
 
                   <div>
@@ -175,11 +175,11 @@ export function PricingSection() {
                       >
                         {feature.included ? (
                           <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500">
-                            <Check className="h-3.5 w-3.5 text-white" />
+                            <Check className="h-3.5 w-3.5 text-white" aria-hidden="true" />
                           </div>
                         ) : (
                           <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
-                            <X className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
+                            <X className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                           </div>
                         )}
                         <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -201,7 +201,7 @@ export function PricingSection() {
                       }`}
                     >
                       {plan.cta}
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Button>
                   </Link>
                 </CardFooter>
