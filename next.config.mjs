@@ -11,9 +11,21 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // Optional dependencies are loaded using eval('require') in utils/optional-deps.ts
-  // This bypasses webpack's static analysis and allows the app to build
-  // without these packages installed
+  // ✅ WEBPACK: Handle optional dependencies that may not be installed
+  // These packages are loaded dynamically in lib/optional-deps.ts
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Mark optional dependencies as external to prevent build errors
+      config.externals = config.externals || [];
+      config.externals.push({
+        '@upstash/ratelimit': 'commonjs @upstash/ratelimit',
+        '@upstash/redis': 'commonjs @upstash/redis',
+        '@sentry/nextjs': 'commonjs @sentry/nextjs',
+      });
+    }
+    return config;
+  },
+
   async headers() {
     // ✅ SECURITY: Strict CSP in production (no unsafe-eval, no unsafe-inline for scripts)
     // Development mode allows unsafe-eval for Hot Module Replacement (HMR)

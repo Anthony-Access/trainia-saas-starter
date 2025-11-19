@@ -12,8 +12,8 @@ export const stripe = new Stripe(
   {
     // https://github.com/stripe/stripe-node#configuration
     // https://stripe.com/docs/api/versioning
-    // @ts-ignore
-    apiVersion: null,
+    // Omitting apiVersion allows Stripe to use the account's default version
+    // This is safer than using null and avoids type errors
     // ✅ SECURITY: Prevent hanging requests and DoS attacks
     timeout: 10000, // 10 seconds maximum per request
     maxNetworkRetries: 2, // Automatic retry on network failures

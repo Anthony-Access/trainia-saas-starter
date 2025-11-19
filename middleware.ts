@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
-import { getClientIP, isValidIPFormat } from "@/utils/ip-validation"
+import { getClientIP, isValidIPFormat } from "@/lib/security/validation/ip"
 
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
 

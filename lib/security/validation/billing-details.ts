@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from 'zod';
-import { SecurityLogger } from '@/utils/security-logger';
+import { SecurityLogger } from '@/lib/security/monitoring/security-logger';
 
 // Schéma de validation pour le téléphone
 const PhoneSchema = z.string()

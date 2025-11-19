@@ -8,7 +8,8 @@
  * to help identify and respond to potential attacks.
  */
 
-import { detectIPSpoofing as detectIPSpoofingCentralized } from './ip-validation';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { detectIPSpoofing as detectIPSpoofingCentralized } from '@/lib/security/validation/ip';
 
 interface SecurityEvent {
   type: 'rate_limit_bypass_attempt' | 'suspicious_ip_spoofing' | 'repeated_auth_failure';

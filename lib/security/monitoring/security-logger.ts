@@ -19,6 +19,9 @@
  * 3. Add SENTRY_DSN to environment variables
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // Security event types
 export type SecurityEventType =
   | 'UNAUTHORIZED_ACCESS'
@@ -98,7 +101,7 @@ async function logSecurityEvent(event: SecurityEvent) {
   if (event.severity === 'ERROR' || event.severity === 'CRITICAL') {
     try {
       // Load optional Sentry dependency
-      const { loadSentry } = await import('./optional-deps');
+      const { loadSentry } = await import('@/lib/optional-deps');
       const Sentry = await loadSentry();
 
       if (Sentry) {

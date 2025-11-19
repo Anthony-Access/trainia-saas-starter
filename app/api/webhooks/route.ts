@@ -1,15 +1,15 @@
 import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe/config';
+import { stripe } from '@/lib/integrations/stripe/config';
 import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange,
   deleteProductRecord,
   deletePriceRecord
-} from '@/utils/supabase/admin';
-import { rateLimitWebhook, getClientIdentifier, getRateLimitMode } from '@/utils/rate-limit-distributed';
-import { SecurityLogger } from '@/utils/security-logger';
-import { detectIPSpoofing, analyzeRateLimitBypass } from '@/utils/security-monitor';
+} from '@/lib/integrations/supabase/admin';
+import { distributedRateLimit, getClientIdentifier, getRateLimitMode } from '@/lib/security/rate-limiting';
+import { SecurityLogger } from '@/lib/security/monitoring/security-logger';
+import { detectIPSpoofing, analyzeRateLimitBypass } from '@/lib/security/monitoring/security-monitor';
 
 // Force dynamic rendering - don't statically analyze during build
 export const dynamic = 'force-dynamic';
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
   // Uses distributed Redis if configured, otherwise falls back to in-memory
   // This prevents abuse while allowing legitimate high-volume webhook processing
   const identifier = getClientIdentifier(req);
-  const rateLimitResult = await rateLimitWebhook(identifier);
+  const rateLimitResult = await distributedRateLimit(identifier, { limit: 50, windowInSeconds: 60 }, 'webhook');
 
   if (!rateLimitResult.success) {
     console.warn(`⚠️  Rate limit exceeded for ${identifier}`);
@@ -96,8 +96,8 @@ export async function POST(req: Request) {
       headers: {
         'X-RateLimit-Limit': '50',
         'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-        'X-RateLimit-Reset': rateLimitResult.resetIn.toString(),
-        'Retry-After': rateLimitResult.resetIn.toString()
+        'X-RateLimit-Reset': (rateLimitResult.resetIn ?? 60).toString(),
+        'Retry-After': (rateLimitResult.resetIn ?? 60).toString()
       }
     });
   }

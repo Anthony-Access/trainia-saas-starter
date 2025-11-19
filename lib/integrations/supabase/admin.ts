@@ -1,11 +1,11 @@
 import { createClient } from "@supabase/supabase-js"
-import { toDateTime } from '@/utils/helpers';
-import { stripe } from '@/utils/stripe/config';
+import { toDateTime } from '@/lib/helpers';
+import { stripe } from '@/lib/integrations/stripe/config';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from '@/types/database.types';
-import { validateStripeMetadata } from '@/utils/validation/stripe-metadata';
-import { validateBillingDetails } from '@/utils/validation/billing-details';
-import { withLock } from '@/utils/distributed-lock';
+import { validateStripeMetadata } from '@/lib/security/validation/stripe-metadata';
+import { validateBillingDetails } from '@/lib/security/validation/billing-details';
+import { withLock } from '@/lib/security/distributed-lock';
 
 export function createAdminClient() {
     const supabase = createClient<Database>(
@@ -290,9 +290,8 @@ const manageSubscriptionStatusChange = async (
         }),
         status: subscription.status,
         price_id: subscription.items.data[0].price.id,
-        //TODO check quantity on subscription
-        // @ts-ignore
-        quantity: subscription.quantity,
+        // Quantity is stored in subscription items, not directly on subscription
+        quantity: subscription.items.data[0].quantity ?? null,
         cancel_at_period_end: subscription.cancel_at_period_end,
         cancel_at: subscription.cancel_at
             ? toDateTime(subscription.cancel_at).toISOString()
@@ -329,8 +328,8 @@ const manageSubscriptionStatusChange = async (
 
     // For a new subscription copy the billing details to the customer object.
     // NOTE: This is a costly operation and should happen at the very end.
-    if (createAction && subscription.default_payment_method && uuid)
-        //@ts-ignore
+    // The default_payment_method is expanded (not just an ID) because we used expand: ['default_payment_method']
+    if (createAction && subscription.default_payment_method && uuid && typeof subscription.default_payment_method === 'object')
         await copyBillingDetailsToCustomer(
             uuid,
             subscription.default_payment_method as Stripe.PaymentMethod

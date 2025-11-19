@@ -14,7 +14,8 @@
  * Compliance: SOC2, GDPR, PCI-DSS compatible
  */
 
-import { supabaseAdmin } from '@/utils/supabase/admin';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { supabaseAdmin } from '@/lib/integrations/supabase/admin';
 import { currentUser } from '@clerk/nextjs/server';
 import { headers } from 'next/headers';
 

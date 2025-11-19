@@ -1,17 +1,17 @@
 'use server';
 
 import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe/config';
-import { createOrRetrieveCustomer, supabaseAdmin } from '@/utils/supabase/admin';
+import { stripe } from '@/lib/integrations/stripe/config';
+import { createOrRetrieveCustomer, supabaseAdmin } from '@/lib/integrations/supabase/admin';
 import {
     getURL,
     getErrorRedirect,
     calculateTrialEndUnixTimestamp
-} from '@/utils/helpers';
+} from '@/lib/helpers';
 import { Tables } from '@/types/database.types';
-import { auth, currentUser } from '@clerk/nextjs/server';
-import { RateLimiters } from '@/utils/rate-limit-actions';
-import { AuditLoggers } from '@/utils/audit-logger';
+import { currentUser } from '@clerk/nextjs/server';
+import { RateLimiters } from '@/lib/security/rate-limiting/actions';
+import { AuditLoggers } from '@/lib/security/monitoring/audit-logger';
 
 type Price = Tables<'prices'>;
 
@@ -25,8 +25,9 @@ export async function checkoutWithStripe(
         // ✅ SECURITY: Rate limit checkout sessions (3 per 5 minutes)
         const rateLimitResult = await RateLimiters.checkout();
         if (!rateLimitResult.success) {
+            const resetTime = rateLimitResult.reset ?? (Date.now() / 1000 + 300); // fallback 5 minutes
             throw new Error(
-                `Too many checkout attempts. Please try again in ${Math.ceil((rateLimitResult.reset - Date.now() / 1000) / 60)} minutes.`
+                `Too many checkout attempts. Please try again in ${Math.ceil((resetTime - Date.now() / 1000) / 60)} minutes.`
             );
         }
 
@@ -148,8 +149,9 @@ export async function createBillingPortalSession() {
         // ✅ SECURITY: Rate limit billing portal access (10 per hour)
         const rateLimitResult = await RateLimiters.billingPortal();
         if (!rateLimitResult.success) {
+            const resetTime = rateLimitResult.reset ?? (Date.now() / 1000 + 3600); // fallback 1 hour
             throw new Error(
-                `Too many billing portal requests. Please try again in ${Math.ceil((rateLimitResult.reset - Date.now() / 1000) / 60)} minutes.`
+                `Too many billing portal requests. Please try again in ${Math.ceil((resetTime - Date.now() / 1000) / 60)} minutes.`
             );
         }
 
