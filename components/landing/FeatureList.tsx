@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from 'framer-motion'
-import { Clock, Target, CheckCircle, FileText, Users, Brain } from 'lucide-react'
+import { Clock, Target, CheckCircle, FileText, Zap, Globe } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const features = [
@@ -26,14 +26,14 @@ const features = [
     description: "Maintenez une qualité rédactionnelle et une mise en page homogènes sur tous vos documents. Renforcez votre image de marque avec des mémoires techniques soignés et structurés."
   },
   {
-    icon: Users,
-    title: "Collaboration d'équipe simplifiée",
-    description: "Centralisez la production de vos réponses et facilitez la contribution de vos experts métiers. Gagnez en efficacité avec un workflow unifié et des révisions collaboratives."
+    icon: Zap,
+    title: "Génération automatique instantanée",
+    description: "Votre mémoire technique créé automatiquement en quelques minutes seulement. Plus besoin de passer des heures à rédiger, l'IA s'occupe de tout."
   },
   {
-    icon: Brain,
-    title: "IA spécialisée marchés publics",
-    description: "Bénéficiez d'une intelligence artificielle entraînée sur le vocabulaire et les exigences spécifiques des appels d'offres. Plus vous l'utilisez, plus elle s'adapte à votre secteur d'activité."
+    icon: Globe,
+    title: "Disponible 24h/24, 7j/7",
+    description: "Accédez à Memo-IA à tout moment, où que vous soyez. Répondez aux appels d'offres même en dehors des horaires de bureau, sans contrainte."
   }
 ]
 

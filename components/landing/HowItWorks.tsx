@@ -138,7 +138,7 @@ export function HowItWorks() {
               <div className="h-2 w-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
             </div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              En moyenne, générez un mémoire technique complet en moins de 10 minutes
+              En moyenne, générez un mémoire technique complet en moins de 30 minutes
             </p>
           </div>
         </motion.div>
