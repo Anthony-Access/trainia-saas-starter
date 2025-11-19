@@ -8,16 +8,14 @@ import {
   Clock,
   TrendingUp,
   Users,
-  Zap,
-  Shield,
-  Plus,
-  Settings,
-  CreditCard,
   HelpCircle
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { StatsGrid } from '@/components/dashboard/StatsGrid'
+import { QuickActions } from '@/components/dashboard/QuickActions'
+import { AccountStatus } from '@/components/dashboard/AccountStatus'
 
 interface DashboardStats {
   automations: number
@@ -149,129 +147,15 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {statCards.map((stat, index) => (
-            <motion.div
-              key={stat.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-800">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {stat.title}
-                  </CardTitle>
-                  <div className={`rounded-lg p-2 ${stat.bgColor}`}>
-                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {stat.value}
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {stat.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        <StatsGrid stats={statCards} />
 
         {/* Main Content */}
         <div className="mt-8 grid gap-8 lg:grid-cols-3">
           {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="lg:col-span-2"
-          >
-            <Card className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-800">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                  Quick Actions
-                </CardTitle>
-                <CardDescription>
-                  Get started with these common tasks
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {quickActions.map((action) => (
-                  <div
-                    key={action.title}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="rounded-lg bg-blue-100 p-2 dark:bg-blue-900/30">
-                        <action.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900 dark:text-white">
-                          {action.title}
-                        </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {action.description}
-                        </p>
-                      </div>
-                    </div>
-                    <Button
-                      variant={action.primary ? "default" : "outline"}
-                      size="sm"
-                      className="gap-2"
-                    >
-                      {action.primary && <Plus className="h-4 w-4" />}
-                      {action.primary ? "Create" : "View"}
-                    </Button>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </motion.div>
+          <QuickActions actions={quickActions} />
 
           {/* Account Status */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <Card className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-800">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-green-600" />
-                  Account Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Plan
-                  </span>
-                  <Badge variant="secondary">Free Trial</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Status
-                  </span>
-                  <Badge variant="default" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
-                    Active
-                  </Badge>
-                </div>
-                <div className="pt-4 space-y-2">
-                  <Button variant="outline" size="sm" className="w-full gap-2">
-                    <CreditCard className="h-4 w-4" />
-                    Upgrade Plan
-                  </Button>
-                  <Button variant="ghost" size="sm" className="w-full gap-2">
-                    <Settings className="h-4 w-4" />
-                    Account Settings
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <AccountStatus />
         </div>
 
         {/* Getting Started */}
