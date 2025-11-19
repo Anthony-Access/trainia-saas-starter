@@ -7,11 +7,11 @@ import Link from 'next/link'
 
 export function CTASection() {
   const benefits = [
-    "No credit card required",
-    "14-day free trial",
-    "Cancel anytime",
-    "Full feature access",
-    "Priority support"
+    "Aucune carte bancaire requise",
+    "Essai gratuit de 14 jours",
+    "Annulation à tout moment",
+    "Accès à toutes les fonctionnalités",
+    "Support prioritaire"
   ]
 
   return (
@@ -40,7 +40,7 @@ export function CTASection() {
                 variant="secondary"
                 className="gap-2 px-8 py-3 text-base font-semibold"
               >
-                Start Your Free Trial
+                Démarrer gratuitement
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
@@ -51,7 +51,7 @@ export function CTASection() {
                 size="lg"
                 className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-base font-semibold"
               >
-                Sign In to Your Account
+                Se connecter
               </Button>
             </Link>
           </div>
