@@ -108,7 +108,7 @@ export function detectIPSpoofing(req: Request | { headers: Headers }): {
   const ips = {
     cfIp,
     realIp,
-    forwardedFor: forwardedFor?.split(',')[0].trim(),
+    forwardedFor: forwardedFor?.split(',')[0].trim() ?? null,
     trueClientIp,
   };
 
