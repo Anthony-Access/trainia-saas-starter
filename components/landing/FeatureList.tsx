@@ -1,46 +1,49 @@
 "use client"
 
 import { motion } from 'framer-motion'
-import { Brain, Zap, Shield, TrendingUp, Clock, Users } from 'lucide-react'
+import { Clock, Target, CheckCircle, FileText, Users, Brain } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const features = [
   {
-    icon: Brain,
-    title: "AI-Powered Intelligence",
-    description: "Leverage cutting-edge artificial intelligence to make smarter business decisions and automate complex workflows."
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast Automation",
-    description: "Process tasks in seconds that would normally take hours, freeing up your team to focus on high-value work."
-  },
-  {
-    icon: Shield,
-    title: "Enterprise-Grade Security",
-    description: "Bank-level encryption and security measures to keep your sensitive business data protected at all times."
-  },
-  {
-    icon: TrendingUp,
-    title: "Boost Productivity",
-    description: "Increase operational efficiency by up to 80% with intelligent process automation and workflow optimization."
-  },
-  {
     icon: Clock,
-    title: "24/7 Operations",
-    description: "Keep your business running round-the-clock with automated workflows that work while you sleep."
+    title: "Réduisez vos délais de 80%",
+    description: "Générez automatiquement vos mémoires techniques en quelques minutes au lieu de plusieurs jours. Concentrez-vous sur la stratégie commerciale pendant que l'IA rédige vos réponses."
+  },
+  {
+    icon: Target,
+    title: "Maximisez vos chances de succès",
+    description: "Améliorez la qualité et la pertinence de vos réponses grâce à une analyse approfondie des critères d'évaluation. Présentez des propositions structurées qui répondent précisément aux attentes du donneur d'ordre."
+  },
+  {
+    icon: CheckCircle,
+    title: "Conformité garantie aux exigences",
+    description: "L'IA analyse automatiquement chaque critère du cahier des charges et s'assure qu'aucune exigence n'est oubliée. Éliminez les risques de non-conformité administrative."
+  },
+  {
+    icon: FileText,
+    title: "Cohérence professionnelle",
+    description: "Maintenez une qualité rédactionnelle et une mise en page homogènes sur tous vos documents. Renforcez votre image de marque avec des mémoires techniques soignés et structurés."
   },
   {
     icon: Users,
-    title: "Team Collaboration",
-    description: "Empower your entire team with intuitive tools that enhance collaboration and streamline communication."
+    title: "Collaboration d'équipe simplifiée",
+    description: "Centralisez la production de vos réponses et facilitez la contribution de vos experts métiers. Gagnez en efficacité avec un workflow unifié et des révisions collaboratives."
+  },
+  {
+    icon: Brain,
+    title: "IA spécialisée marchés publics",
+    description: "Bénéficiez d'une intelligence artificielle entraînée sur le vocabulaire et les exigences spécifiques des appels d'offres. Plus vous l'utilisez, plus elle s'adapte à votre secteur d'activité."
   }
 ]
 
 export function FeatureList() {
   return (
-    <section className="py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="relative py-24 sm:py-32 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-hidden">
+      {/* Grille en arrière-plan avec effet mask */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -64,11 +67,13 @@ export function FeatureList() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
+              whileHover={{ scale: 1.05 }}
+              className="group"
             >
-              <Card className="h-full border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
+              <Card className="h-full border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 dark:hover:shadow-purple-500/20">
                 <CardHeader>
-                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                    <feature.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="h-6 w-6 text-white" />
                   </div>
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
                 </CardHeader>
