@@ -38,7 +38,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="#"
+                  href="/#features"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
                   Fonctionnalités
@@ -46,7 +46,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/#pricing"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
                   Tarifs
@@ -54,10 +54,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/faq"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
-                  Démo
+                  FAQ
                 </Link>
               </li>
             </ul>
@@ -71,7 +71,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="#"
+                  href="/about"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
                   À propos
@@ -79,18 +79,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/contact"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
-                  Blog
+                  Contact
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/sign-up"
                   className="text-sm hover:text-white transition-colors duration-200"
                 >
-                  Contact
+                  Essai gratuit
                 </Link>
               </li>
             </ul>

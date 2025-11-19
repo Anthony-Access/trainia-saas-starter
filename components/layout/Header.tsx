@@ -36,10 +36,10 @@ export function Header() {
         <div className="hidden items-center space-x-8 md:flex">
           <SignedOut>
             <Link href="/sign-in">
-              <Button variant="ghost">Sign In</Button>
+              <Button variant="ghost">Se connecter</Button>
             </Link>
             <Link href="/sign-up">
-              <Button>Get Started</Button>
+              <Button>Commencer</Button>
             </Link>
           </SignedOut>
           <SignedIn>
@@ -84,14 +84,14 @@ export function Header() {
                   className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Sign In
+                  Se connecter
                 </Link>
                 <Link
                   href="/sign-up"
                   className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Get Started
+                  Commencer
                 </Link>
               </SignedOut>
               <SignedIn>
