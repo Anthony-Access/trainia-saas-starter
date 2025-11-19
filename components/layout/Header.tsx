@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import { Menu, X, Brain } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function Header() {
@@ -16,9 +16,18 @@ export function Header() {
 
       <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <Brain className="h-8 w-8 text-blue-600" />
-          <span className="text-xl font-bold text-gray-900 dark:text-white">
+        <Link href="/" className="flex items-center space-x-3 group">
+          {/* Logo with 4 colored squares */}
+          <div className="relative h-10 w-10 transition-transform group-hover:scale-110">
+            <div className="grid grid-cols-2 gap-1 h-full w-full rotate-0 group-hover:rotate-6 transition-all duration-300">
+              <div className="rounded-sm bg-gradient-to-br from-purple-500 to-purple-600 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-fuchsia-500 to-fuchsia-600 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-violet-500 to-violet-600 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-pink-500 to-pink-600 shadow-sm" />
+            </div>
+          </div>
+          {/* Brand name */}
+          <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 bg-clip-text text-transparent">
             Memo-IA
           </span>
         </Link>
