@@ -1,28 +1,49 @@
 /**
  * IP Validation and Extraction Utilities
  *
- * Centralized module for IP address validation and client IP extraction.
- * Used across middleware, rate limiting, and security monitoring.
+ * ✅ CENTRALIZED MODULE - Single source of truth for IP handling
+ *
+ * This module consolidates all IP validation, extraction, and spoofing detection
+ * logic used across the application. Import from here instead of duplicating code.
+ *
+ * Used by:
+ * - middleware.ts (CSRF protection, authentication)
+ * - utils/rate-limit.ts (rate limiting)
+ * - utils/security-monitor.ts (security events)
+ * - API routes (webhooks, etc.)
  *
  * ✅ SECURITY: Provides defense against IP spoofing attacks
+ * ✅ PERFORMANCE: Optimized regex patterns for IPv4/IPv6 validation
+ * ✅ MAINTAINABILITY: All IP logic in one place
  */
 
 /**
  * Validates IP address format (IPv4 or IPv6)
  *
+ * Supports:
+ * - IPv4: 0.0.0.0 to 255.255.255.255
+ * - IPv6: Full format (8 groups) and compressed formats (::)
+ *
  * @param ip - IP address string to validate
  * @returns true if valid IPv4 or IPv6, false otherwise
+ *
+ * @example
+ * ```typescript
+ * isValidIPFormat('192.168.1.1') // true
+ * isValidIPFormat('2001:0db8::1') // true
+ * isValidIPFormat('invalid') // false
+ * ```
  */
 export function isValidIPFormat(ip: string): boolean {
   if (!ip || typeof ip !== 'string') {
     return false;
   }
 
-  // IPv4: 0.0.0.0 to 255.255.255.255
+  // IPv4: 0.0.0.0 to 255.255.255.255 (strict validation)
   const ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
   // IPv6: Full and compressed formats
-  const ipv6 = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$/;
+  const ipv6 = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$|^[0-9a-fA-F]{1,4}::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}$/;
 
   return ipv4.test(ip) || ipv6.test(ip);
 }
@@ -163,13 +184,26 @@ export function detectIPSpoofing(req: Request | { headers: Headers }): {
 /**
  * Creates a fingerprint for rate limiting based on IP and other factors
  *
+ * This creates a composite identifier that's harder to spoof than IP alone.
+ * Used for rate limiting to prevent bypass attempts.
+ *
  * @param req - Request object
  * @param additionalFactors - Additional factors to include in fingerprint
  * @returns Unique fingerprint string
+ *
+ * @example
+ * ```typescript
+ * const fingerprint = createIPFingerprint(request);
+ * // Returns: "192.168.1.1|Mozilla/5.0...|en-US"
+ *
+ * const hashedFingerprint = createIPFingerprint(request, [], true);
+ * // Returns: "192.168.1.1:abc123def" (with hash)
+ * ```
  */
 export function createIPFingerprint(
   req: Request | { headers: Headers },
-  additionalFactors: string[] = []
+  additionalFactors: string[] = [],
+  includeHash = false
 ): string {
   const ip = getClientIP(req);
   const headers = req.headers;
@@ -177,6 +211,20 @@ export function createIPFingerprint(
   const userAgent = headers.get('user-agent') || '';
   const acceptLanguage = headers.get('accept-language') || '';
 
+  if (includeHash) {
+    // Create a hashed fingerprint for compact identifiers
+    const fingerprintComponents = [
+      userAgent,
+      acceptLanguage.slice(0, 10),
+      headers.get('accept-encoding')?.slice(0, 10) || '',
+      ...additionalFactors,
+    ].join('|');
+
+    const hash = simpleHash(fingerprintComponents);
+    return `${ip}:${hash}`;
+  }
+
+  // Create a verbose fingerprint for logging/debugging
   const factors = [
     ip,
     userAgent.slice(0, 100), // Limit length
@@ -185,4 +233,53 @@ export function createIPFingerprint(
   ].filter(Boolean);
 
   return factors.join('|');
+}
+
+/**
+ * Simple hash function for creating shorter identifiers
+ *
+ * Uses a basic string hashing algorithm (similar to Java's hashCode)
+ * converted to base36 for compactness.
+ *
+ * @param str - String to hash
+ * @returns Hash value as string (base36)
+ *
+ * @example
+ * ```typescript
+ * simpleHash('Mozilla/5.0 Chrome/120.0') // "1a2b3c4d"
+ * ```
+ */
+export function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash).toString(36);
+}
+
+/**
+ * Get client identifier for rate limiting with advanced spoofing detection
+ *
+ * This is a convenience wrapper around createIPFingerprint specifically
+ * designed for rate limiting use cases.
+ *
+ * Creates a composite identifier using:
+ * - Client IP (validated and spoofing-checked)
+ * - User-Agent hash
+ * - Accept-Language
+ * - Accept-Encoding
+ *
+ * @param request - The incoming request
+ * @returns Client identifier (format: "IP:hash")
+ *
+ * @example
+ * ```typescript
+ * const identifier = getClientIdentifier(request);
+ * const result = rateLimit(identifier, { limit: 10, windowInSeconds: 60 });
+ * ```
+ */
+export function getClientIdentifier(request: Request): string {
+  return createIPFingerprint(request, [], true);
 }

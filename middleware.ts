@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
+import { getClientIP, isValidIPFormat } from "@/utils/ip-validation"
 
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
 
@@ -133,60 +134,8 @@ function validatePath(path: string): string {
   return pathOnly;
 }
 
-/**
- * Get client IP from request headers with spoofing detection
- * Edge Runtime compatible version (no external dependencies)
- *
- * Security improvements:
- * - Validates IP format
- * - Detects header inconsistencies
- * - Prioritizes trusted headers (cf-connecting-ip)
- * - Never blindly trusts X-Forwarded-For
- */
-function getClientIP(req: Request): string {
-  const cfIp = req.headers.get('cf-connecting-ip');
-  const realIp = req.headers.get('x-real-ip');
-  const forwardedFor = req.headers.get('x-forwarded-for');
-
-  // ✅ SECURITY: Detect IP spoofing
-  if (cfIp && realIp && cfIp !== realIp) {
-    console.warn('⚠️ IP header mismatch detected:', {
-      cfIp,
-      realIp,
-      url: req.url
-    });
-  }
-
-  // Priority: Cloudflare (trusted) > X-Real-IP > X-Forwarded-For (validated)
-  if (cfIp && isValidIPFormat(cfIp)) {
-    return cfIp;
-  }
-
-  if (realIp && isValidIPFormat(realIp)) {
-    return realIp;
-  }
-
-  if (forwardedFor) {
-    const firstIP = forwardedFor.split(',')[0].trim();
-    if (isValidIPFormat(firstIP)) {
-      return firstIP;
-    }
-  }
-
-  return 'unknown';
-}
-
-/**
- * Validates IP address format (IPv4 or IPv6)
- */
-function isValidIPFormat(ip: string): boolean {
-  // IPv4
-  const ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-  // IPv6 (simplified)
-  const ipv6 = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$/;
-
-  return ipv4.test(ip) || ipv6.test(ip);
-}
+// ✅ REFACTORED: IP validation and extraction logic centralized in @/utils/ip-validation
+// This eliminates code duplication and improves maintainability
 
 export default clerkMiddleware(async (auth, req) => {
   const url = new URL(req.url);
