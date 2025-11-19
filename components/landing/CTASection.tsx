@@ -14,9 +14,9 @@ export function CTASection() {
   ]
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-blue-100 to-purple-100 dark:from-slate-800 dark:via-blue-900 dark:to-purple-900">
+    <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-purple-100 to-blue-100 dark:from-purple-900 via-blue-900 dark:to-slate-800">
       {/* Grille en arrière-plan cohérente avec les autres sections */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_40%,transparent_100%)]" />
 
       {/* Effet de lueur gradient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/20 via-fuchsia-500/20 to-pink-500/20 rounded-full blur-3xl" />
