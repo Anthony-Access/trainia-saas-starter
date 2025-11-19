@@ -109,7 +109,7 @@ export function FAQSection() {
           className="mt-16 text-center"
         >
           <p className="text-gray-600 dark:text-gray-400">
-            Vous avez d'autres questions ?{' '}
+            Vous avez d&apos;autres questions ?{' '}
             <a
               href="/contact"
               className="font-semibold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"

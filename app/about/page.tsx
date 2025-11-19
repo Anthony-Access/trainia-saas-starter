@@ -21,7 +21,7 @@ export default function AboutPage() {
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-xl text-gray-600 dark:text-gray-300">
-            Notre mission : démocratiser l'accès aux marchés publics et privés en rendant la rédaction de mémoires techniques accessible à toutes les entreprises, quelle que soit leur taille.
+            Notre mission : démocratiser l&apos;accès aux marchés publics et privés en rendant la rédaction de mémoires techniques accessible à toutes les entreprises, quelle que soit leur taille.
           </p>
         </div>
       </section>
@@ -34,13 +34,13 @@ export default function AboutPage() {
           </h2>
           <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300">
             <p>
-              Memo-IA est né d'un constat simple : la rédaction de mémoires techniques pour les appels d'offres est chronophage, coûteuse et souvent inaccessible pour les PME. Trop d'entreprises compétentes renoncent à répondre aux appels d'offres par manque de temps et de ressources.
+              Memo-IA est né d&apos;un constat simple : la rédaction de mémoires techniques pour les appels d&apos;offres est chronophage, coûteuse et souvent inaccessible pour les PME. Trop d&apos;entreprises compétentes renoncent à répondre aux appels d&apos;offres par manque de temps et de ressources.
             </p>
             <p>
               En 2024, nous avons décidé de changer cela en développant une intelligence artificielle spécialisée dans la rédaction de mémoires techniques. Notre IA comprend les exigences des cahiers des charges, analyse les critères de notation et génère des mémoires conformes et pertinents.
             </p>
             <p>
-              Aujourd'hui, plus de 500 entreprises utilisent Memo-IA pour gagner du temps et remporter plus de marchés. Notre technologie 100% française est hébergée en Europe et respecte scrupuleusement le RGPD.
+              Aujourd&apos;hui, plus de 500 entreprises utilisent Memo-IA pour gagner du temps et remporter plus de marchés. Notre technologie 100% française est hébergée en Europe et respecte scrupuleusement le RGPD.
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function AboutPage() {
               {
                 icon: Target,
                 title: 'Excellence',
-                description: 'Nous visons l\'excellence dans chaque mémoire généré pour maximiser vos chances de succès.'
+                description: 'Nous visons l&apos;excellence dans chaque mémoire généré pour maximiser vos chances de succès.'
               },
               {
                 icon: Users,
@@ -126,10 +126,10 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
-            Prêt à transformer votre approche des appels d'offres ?
+            Prêt à transformer votre approche des appels d&apos;offres ?
           </h2>
           <p className="mb-8 text-lg text-gray-600 dark:text-gray-300">
-            Rejoignez les centaines d'entreprises qui gagnent plus de marchés avec Memo-IA
+            Rejoignez les centaines d&apos;entreprises qui gagnent plus de marchés avec Memo-IA
           </p>
           <a
             href="/sign-up"
