@@ -1,184 +1,160 @@
 "use client"
 
-import { motion } from 'framer-motion'
-import { ArrowRight, CheckCircle2, PlayCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Play, CheckCircle2, TrendingUp, CreditCard, Send } from 'lucide-react'
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background pt-16 md:pt-20 lg:pt-24">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-      <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]" />
-
-      {/* Styles pour l'effet de pinceau */}
-      <style jsx>{`
-        .brush-highlight {
-          position: relative;
-          display: inline-block;
-          padding: 0.05em 0.2em;
-          z-index: 1;
-        }
-
-        .brush-highlight::before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) rotate(-1deg);
-          width: 100%;
-          height: 90%;
-          background: linear-gradient(120deg, #A855F7 0%, #D946EF 50%, #EC4899 100%);
-          border-radius: 4px;
-          z-index: -1;
-          opacity: 0.2;
-          transition: opacity 0.3s ease;
-        }
-        
-        .brush-highlight:hover::before {
-            opacity: 0.4;
-        }
-
-        .brush-stroke-path {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: dash 1.5s ease-out forwards;
-        }
-
-        @keyframes dash {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-      `}</style>
-
+    <section className="relative overflow-hidden bg-background pt-20 pb-16 lg:pt-32 lg:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
-          {/* Left Column: Text Content */}
-          <div className="max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
-                <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
-                Nouvelle version 2.0 disponible
-              </div>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8 items-center">
 
-              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl mb-6 leading-[1.1]">
-                Gagnez vos <br />
-                <span className="relative whitespace-nowrap">
-                  <span className="relative z-10">marchés publics</span>
-                  <svg className="absolute -bottom-2 left-0 -z-10 h-4 w-full text-primary/30" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" className="brush-stroke-path" />
-                  </svg>
-                </span>
-                <br />
-                avec l&apos;IA
-              </h1>
-
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                La première plateforme d&apos;intelligence artificielle conçue pour les PME qui veulent tripler leur taux de réussite aux appels d&apos;offres sans recruter d&apos;expert.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                <Link href="/sign-up">
-                  <Button size="lg" className="w-full sm:w-auto text-base h-12 px-8 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
-                    Démarrer gratuitement
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-8">
-                  <PlayCircle className="mr-2 h-4 w-4" />
-                  Voir la démo
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>Pas de carte requise</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>14 jours d&apos;essai</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>Support français</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right Column: Visual/Dashboard Mockup */}
+          {/* LEFT COLUMN: Text Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative lg:ml-auto"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col justify-center text-left"
           >
-            <div className="relative rounded-xl border bg-background/50 p-2 shadow-2xl backdrop-blur-sm ring-1 ring-inset ring-gray-900/10 dark:ring-white/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <div className="rounded-lg bg-background shadow-sm ring-1 ring-gray-900/5 overflow-hidden aspect-[4/3] relative">
-                {/* Abstract Dashboard Representation */}
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6 flex flex-col gap-4">
-                  {/* Header */}
-                  <div className="h-8 w-full flex items-center justify-between border-b pb-4">
-                    <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700 rounded"></div>
-                    <div className="flex gap-2">
-                      <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700"></div>
-                    </div>
-                  </div>
-                  {/* Content */}
-                  <div className="flex-1 grid grid-cols-12 gap-4">
-                    <div className="col-span-3 bg-white dark:bg-slate-800 rounded-lg border shadow-sm p-4 space-y-3">
-                      <div className="h-3 w-16 bg-slate-100 dark:bg-slate-700 rounded"></div>
-                      <div className="h-3 w-full bg-slate-50 dark:bg-slate-700/50 rounded"></div>
-                      <div className="h-3 w-20 bg-slate-50 dark:bg-slate-700/50 rounded"></div>
-                    </div>
-                    <div className="col-span-9 bg-white dark:bg-slate-800 rounded-lg border shadow-sm p-6">
-                      <div className="flex justify-between items-center mb-6">
-                        <div className="h-5 w-32 bg-slate-200 dark:bg-slate-700 rounded"></div>
-                        <div className="h-8 w-24 bg-primary/10 rounded text-primary flex items-center justify-center text-xs font-medium">Génération...</div>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="h-4 w-full bg-slate-100 dark:bg-slate-700 rounded animate-pulse"></div>
-                        <div className="h-4 w-[90%] bg-slate-100 dark:bg-slate-700 rounded animate-pulse"></div>
-                        <div className="h-4 w-[95%] bg-slate-100 dark:bg-slate-700 rounded animate-pulse"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl mb-6 leading-[1.1]">
+              We’re here to Increase your{' '}
+              <span className="relative inline-block text-primary">
+                Productivity
+                {/* Wavy Underline SVG - Purple */}
+                <svg
+                  className="absolute -bottom-2 left-0 w-full h-3 text-primary/80"
+                  viewBox="0 0 100 10"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M0 5 Q 50 10 100 5"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                  />
+                </svg>
+              </span>
+            </h1>
 
-              {/* Floating Badge */}
-              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-xl border border-border flex items-center gap-3 animate-bounce-slow">
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                  <CheckCircle2 className="h-6 w-6" />
+            <p className="text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed">
+              Let&apos;s make your work more organized and easy using the Memo-IA Dashboard with many of the latest features in managing work every day.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-6 mb-12">
+              {/* Primary Button - Pill Shape */}
+              <Link
+                href="/sign-up"
+                className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-300 hover:scale-105"
+              >
+                Try free trial
+              </Link>
+
+              {/* Secondary Button - Play Icon */}
+              <button className="group flex items-center gap-3 text-base font-medium text-foreground hover:text-primary transition-colors">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background shadow-sm group-hover:border-primary group-hover:text-primary transition-colors">
+                  <Play className="h-4 w-4 fill-current" />
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-foreground">Mémoire généré</div>
-                  <div className="text-xs text-muted-foreground">Il y a 2 minutes</div>
-                </div>
+                View Demo
+              </button>
+            </div>
+
+            {/* Social Proof - Logos */}
+            <div className="space-y-4">
+              <p className="text-sm font-medium text-muted-foreground">
+                More than 25,000 teams use Memo-IA
+              </p>
+              <div className="flex flex-wrap items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                {/* Placeholder Logos (Text for now, can be replaced with SVGs) */}
+                <span className="text-xl font-bold font-serif">Unsplash</span>
+                <span className="text-xl font-bold font-mono">Notion</span>
+                <span className="text-xl font-bold font-sans italic">INTERCOM</span>
+                <span className="text-xl font-bold">descript</span>
+                <span className="text-xl font-bold font-serif">grammarly</span>
               </div>
             </div>
           </motion.div>
-        </div>
 
-        {/* Social Proof / Trusted By */}
-        <div className="mt-20 border-t pt-10">
-          <p className="text-center text-sm font-medium text-muted-foreground mb-8">
-            Ils nous font confiance pour leurs appels d&apos;offres
-          </p>
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-5 opacity-60 grayscale transition-all hover:grayscale-0 hover:opacity-100">
-            {/* Placeholder Logos - Replace with real ones or SVGs */}
-            {['Acme Corp', 'Global Tech', 'BuildMaster', 'EcoEnergy', 'UrbanPlan'].map((company) => (
-              <div key={company} className="flex items-center justify-center">
-                <span className="text-lg font-bold text-slate-400">{company}</span>
+          {/* RIGHT COLUMN: Floating UI Composition */}
+          <div className="relative h-[600px] w-full hidden lg:block">
+            {/* Background Shape */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-[3rem] rotate-12" />
+
+            {/* Main Subject Placeholder (Person) */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[550px] bg-gradient-to-b from-gray-200 to-gray-300 rounded-t-[3rem] overflow-hidden shadow-2xl">
+              {/* Placeholder for Image */}
+              <div className="w-full h-full flex items-end justify-center pb-10">
+                <span className="text-gray-400 font-medium">Person Image Placeholder</span>
               </div>
-            ))}
+            </div>
+
+            {/* Floating Element 1: Income Card (Top Right) */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-20 right-10 bg-card border border-border p-4 rounded-2xl shadow-xl w-48 z-10"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                  <TrendingUp className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Total Income</p>
+                  <p className="text-lg font-bold text-foreground">$450.00</p>
+                </div>
+              </div>
+              <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
+                <div className="h-full w-3/4 bg-green-500" />
+              </div>
+            </motion.div>
+
+            {/* Floating Element 2: Credit Card (Bottom Right) */}
+            <motion.div
+              animate={{ y: [0, 15, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-32 -right-4 bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-2xl shadow-2xl w-64 z-20 text-white rotate-[-5deg]"
+            >
+              <div className="flex justify-between items-start mb-6">
+                <CreditCard className="h-6 w-6 text-white/80" />
+                <div className="h-6 w-10 bg-white/20 rounded" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-white/60">Balance</p>
+                <p className="text-xl font-bold">$245.00</p>
+              </div>
+              <div className="mt-4 flex justify-between items-center">
+                <div className="flex -space-x-2">
+                  <div className="h-6 w-6 rounded-full bg-red-400 border border-gray-800" />
+                  <div className="h-6 w-6 rounded-full bg-yellow-400 border border-gray-800" />
+                </div>
+                <p className="text-xs text-white/60">**** 1234</p>
+              </div>
+            </motion.div>
+
+            {/* Floating Element 3: Sent Message (Left) */}
+            <motion.div
+              animate={{ x: [0, 10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              className="absolute top-40 left-0 bg-card border border-border p-3 rounded-2xl shadow-lg flex items-center gap-3 z-10"
+            >
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-foreground">Payment Sent</p>
+                <p className="text-xs text-muted-foreground">Just now</p>
+              </div>
+            </motion.div>
+
+            {/* Floating Element 4: Small Badge (Bottom Left) */}
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-20 left-10 bg-white p-2 rounded-lg shadow-md z-10"
+            >
+              <Send className="h-5 w-5 text-primary" />
+            </motion.div>
+
           </div>
         </div>
       </div>
