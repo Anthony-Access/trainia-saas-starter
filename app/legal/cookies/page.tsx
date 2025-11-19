@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Cookie } from 'lucide-react'
+import { CookiePreferencesButton } from './CookiePreferencesButton'
 
 export const metadata: Metadata = {
   title: 'Politique des Cookies',
@@ -329,17 +330,7 @@ export default function CookiesPage() {
                   Vous pouvez modifier vos préférences à tout moment
                 </p>
                 <div className="flex justify-center">
-                  <button
-                    className="rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-pink-700 hover:shadow-lg"
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        // Cette fonction devra être implémentée avec votre gestionnaire de cookies réel
-                        alert('Votre gestionnaire de cookies s\'ouvrira ici')
-                      }
-                    }}
-                  >
-                    Gérer mes préférences de cookies
-                  </button>
+                  <CookiePreferencesButton />
                 </div>
               </div>
 
