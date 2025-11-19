@@ -1,9 +1,14 @@
 /**
  * Security Monitoring Utilities
  *
+ * ✅ REFACTORED: IP spoofing detection now uses centralized implementation
+ * from @/utils/ip-validation for consistency and maintainability.
+ *
  * This module provides security monitoring and anomaly detection
  * to help identify and respond to potential attacks.
  */
+
+import { detectIPSpoofing as detectIPSpoofingCentralized } from './ip-validation';
 
 interface SecurityEvent {
   type: 'rate_limit_bypass_attempt' | 'suspicious_ip_spoofing' | 'repeated_auth_failure';
@@ -51,29 +56,42 @@ export function logSecurityEvent(event: Omit<SecurityEvent, 'timestamp'>): void 
 /**
  * Detect suspicious IP spoofing patterns
  *
+ * ✅ REFACTORED: Now uses centralized detectIPSpoofing from @/utils/ip-validation
+ *
+ * This wrapper maintains backwards compatibility while delegating to the
+ * centralized IP spoofing detection logic.
+ *
  * An attacker trying to bypass rate limiting will send many requests
  * with different X-Forwarded-For headers but same User-Agent
+ *
+ * @deprecated Consider using detectIPSpoofing from @/utils/ip-validation directly
  */
 export function detectIPSpoofing(
   forwardedFor: string | null,
   realIp: string | null,
   userAgent: string | null
 ): boolean {
-  // If X-Forwarded-For doesn't match X-Real-IP, might be spoofing
-  if (forwardedFor && realIp) {
-    const forwardedIp = forwardedFor.split(',')[0].trim();
-    if (forwardedIp !== realIp) {
-      logSecurityEvent({
-        type: 'suspicious_ip_spoofing',
-        identifier: forwardedIp,
-        metadata: {
-          forwardedFor,
-          realIp,
-          userAgent,
-        },
-      });
-      return true;
-    }
+  // Create a mock request object to use centralized detection
+  const mockHeaders = new Headers();
+  if (forwardedFor) mockHeaders.set('x-forwarded-for', forwardedFor);
+  if (realIp) mockHeaders.set('x-real-ip', realIp);
+  if (userAgent) mockHeaders.set('user-agent', userAgent);
+
+  const mockRequest = { headers: mockHeaders };
+  const result = detectIPSpoofingCentralized(mockRequest);
+
+  if (result.isSuspicious) {
+    logSecurityEvent({
+      type: 'suspicious_ip_spoofing',
+      identifier: forwardedFor || realIp || 'unknown',
+      metadata: {
+        forwardedFor,
+        realIp,
+        userAgent,
+        reason: result.reason,
+      },
+    });
+    return true;
   }
 
   return false;
