@@ -6,7 +6,7 @@ import { Play, CheckCircle2, TrendingUp, CreditCard, Send } from 'lucide-react'
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background pt-20 pb-16 lg:pt-32 lg:pb-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-purple-50/30 pt-20 pb-16 lg:pt-32 lg:pb-24 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8 items-center">
 
