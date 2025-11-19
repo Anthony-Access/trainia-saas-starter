@@ -72,7 +72,7 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section className="relative py-24 sm:py-32 bg-gradient-to-br from-blue-50 via-blue-100 to-purple-50 dark:from-blue-900 via-slate-850 dark:to-purple-900 overflow-hidden">
+    <section className="relative py-24 sm:py-32 bg-gradient-to-br from-blue-50 via-slate-50 to-slate-100 dark:from-slate-800 dark:via-slate-850 dark:to-slate-900 overflow-hidden">
       {/* Grille en arrière-plan avec effet mask */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_40%,transparent_100%)]" />
 
