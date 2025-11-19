@@ -3,7 +3,7 @@ import { Linkedin, Twitter } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="relative bg-gradient-to-b from-gray-800 via-gray-850 to-gray-900 text-gray-300">
+    <footer className="relative bg-background border-t border-border">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         {/* Main footer content - 4 columns */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -20,11 +20,11 @@ export function Footer() {
                 </div>
               </div>
               {/* Brand name */}
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold text-foreground">
                 Memo-IA
               </span>
             </Link>
-            <p className="text-sm text-gray-400 max-w-xs">
+            <p className="text-sm text-muted-foreground max-w-xs">
               L&apos;intelligence artificielle au service de vos appels d&apos;offres.
               Générez vos mémoires techniques en quelques clics.
             </p>
@@ -32,14 +32,14 @@ export function Footer() {
 
           {/* Column 2: Produit */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-4">
               Produit
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/#features"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Fonctionnalités
                 </Link>
@@ -47,7 +47,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/#pricing"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Tarifs
                 </Link>
@@ -55,7 +55,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/faq"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   FAQ
                 </Link>
@@ -65,14 +65,14 @@ export function Footer() {
 
           {/* Column 3: Entreprise */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-4">
               Entreprise
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   À propos
                 </Link>
@@ -80,7 +80,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Contact
                 </Link>
@@ -88,7 +88,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/sign-up"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Essai gratuit
                 </Link>
@@ -98,14 +98,14 @@ export function Footer() {
 
           {/* Column 4: Légal */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-4">
               Légal
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/legal/terms"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   CGU
                 </Link>
@@ -113,7 +113,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/legal/privacy"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Confidentialité
                 </Link>
@@ -121,7 +121,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/legal/mentions"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Mentions légales
                 </Link>
@@ -129,7 +129,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/legal/cookies"
-                  className="text-sm hover:text-white transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Cookies
                 </Link>
@@ -139,10 +139,10 @@ export function Footer() {
         </div>
 
         {/* Bottom section: separator + copyright + social links */}
-        <div className="mt-12 border-t border-gray-800 pt-8">
+        <div className="mt-12 border-t border-border pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             {/* Copyright */}
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-foreground">
               © 2024 Memo-IA. Tous droits réservés.
             </p>
 
@@ -152,7 +152,7 @@ export function Footer() {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors duration-200"
+                className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-5 w-5" />
@@ -161,7 +161,7 @@ export function Footer() {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors duration-200"
+                className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 aria-label="Twitter"
               >
                 <Twitter className="h-5 w-5" />
