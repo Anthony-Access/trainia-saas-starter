@@ -146,7 +146,7 @@ export default function ContactPage() {
             Prêt à essayer Memo-IA ?
           </h2>
           <p className="mb-8 text-lg text-gray-600 dark:text-gray-300">
-            14 jours d'essai gratuit, aucune carte bancaire requise
+            14 jours d&apos;essai gratuit, aucune carte bancaire requise
           </p>
           <a
             href="/sign-up"
