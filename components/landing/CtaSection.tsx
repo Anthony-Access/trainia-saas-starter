@@ -30,7 +30,7 @@ export function CtaSection() {
           </div>
 
           <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl mb-8 leading-tight">
-            Prêt à révolutionner vos réponses aux appels d'offres ?
+            Prêt à révolutionner vos réponses aux appels d&apos;offres ?
           </h2>
 
           <p className="text-lg leading-8 text-gray-300 mb-10 max-w-2xl mx-auto">

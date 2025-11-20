@@ -64,7 +64,7 @@ export function HowItWorksSection() {
                         transition={{ delay: 0.2 }}
                         className="mt-6 text-lg leading-8 text-muted-foreground"
                     >
-                        Une approche fluide en trois étapes pour transformer vos appels d'offres en succès.
+                        Une approche fluide en trois étapes pour transformer vos appels d&apos;offres en succès.
                     </motion.p>
                 </div>
 
