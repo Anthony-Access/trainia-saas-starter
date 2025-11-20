@@ -34,27 +34,40 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <div className="hidden items-center space-x-8 md:flex">
-          <SignedOut>
-            <Link href="/sign-in">
-              <Button variant="ghost">Se connecter</Button>
+          <nav className="flex items-center space-x-6">
+            <Link href="/#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              Fonctionnalités
             </Link>
-            <Link href="/sign-up">
-              <Button className="rounded-full">Commencer</Button>
+            <Link href="/#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              Tarifs
             </Link>
-          </SignedOut>
-          <SignedIn>
-            <Link href="/dashboard">
-              <Button variant="ghost">Dashboard</Button>
+            <Link href="/faq" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              FAQ
             </Link>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-10 h-10",
-                },
-              }}
-              afterSignOutUrl="/"
-            />
-          </SignedIn>
+          </nav>
+          <div className="flex items-center space-x-4">
+            <SignedOut>
+              <Link href="/sign-in">
+                <Button variant="ghost">Se connecter</Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button className="rounded-full">Commencer</Button>
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard">
+                <Button variant="ghost">Tableau de bord</Button>
+              </Link>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10",
+                  },
+                }}
+                afterSignOutUrl="/"
+              />
+            </SignedIn>
+          </div>
         </div>
 
         {/* Mobile menu button */}
@@ -78,6 +91,28 @@ export function Header() {
         <div className="relative md:hidden">
           <div className="border-t border-gray-200/50 bg-white/90 px-2 py-4 backdrop-blur-md dark:border-gray-800/50 dark:bg-gray-900/90">
             <div className="space-y-3">
+              <Link
+                href="/#features"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Fonctionnalités
+              </Link>
+              <Link
+                href="/#pricing"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Tarifs
+              </Link>
+              <Link
+                href="/faq"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                FAQ
+              </Link>
+              <div className="my-2 border-t border-gray-200 dark:border-gray-800" />
               <SignedOut>
                 <Link
                   href="/sign-in"
@@ -100,7 +135,7 @@ export function Header() {
                   className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Dashboard
+                  Tableau de bord
                 </Link>
                 <div className="px-3 py-2">
                   <UserButton afterSignOutUrl="/" />
