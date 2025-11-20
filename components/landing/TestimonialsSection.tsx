@@ -84,13 +84,34 @@ export function TestimonialsSection() {
           </p>
         </motion.div>
 
+        {/* Logos Cloud */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="mt-10 border-y border-border/50 py-8 bg-background/50 backdrop-blur-sm"
+        >
+          <p className="text-center text-sm font-medium text-muted-foreground mb-6">
+            Plus de 500 entreprises innovantes nous font confiance
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+            <span className="text-xl font-bold font-serif">Unsplash</span>
+            <span className="text-xl font-bold font-mono">Notion</span>
+            <span className="text-xl font-bold font-sans italic">INTERCOM</span>
+            <span className="text-xl font-bold">descript</span>
+            <span className="text-xl font-bold font-serif">grammarly</span>
+            <span className="text-xl font-bold font-mono">Linear</span>
+          </div>
+        </motion.div>
+
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           viewport={{ once: true }}
-          className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4 border-y border-border/50 py-8 bg-background/50 backdrop-blur-sm"
+          className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4"
         >
           {[
             { value: "500+", label: "Entreprises" },
@@ -98,11 +119,11 @@ export function TestimonialsSection() {
             { value: "94%", label: "Satisfaction" },
             { value: "4.9/5", label: "Note moyenne" }
           ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl font-bold text-primary">
+            <div key={index} className="text-center p-6 rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-all">
+              <div className="text-3xl font-bold text-primary mb-2">
                 {stat.value}
               </div>
-              <div className="mt-1 text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground font-medium">
                 {stat.label}
               </div>
             </div>

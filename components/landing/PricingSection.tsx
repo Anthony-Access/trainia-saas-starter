@@ -120,11 +120,14 @@ export function PricingSection() {
 
               <Card
                 className={cn(
-                  "flex-1 flex flex-col transition-all duration-300 hover:shadow-xl bg-card",
+                  "flex-1 flex flex-col transition-all duration-300 hover:shadow-2xl bg-card relative overflow-hidden",
                   plan.highlight,
-                  plan.popular ? 'shadow-lg scale-105 z-10' : 'hover:scale-105'
+                  plan.popular ? 'shadow-xl scale-105 z-10 border-primary/50' : 'hover:scale-105 border-border/50'
                 )}
               >
+                {plan.popular && (
+                  <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
+                )}
                 <CardHeader className="space-y-4 pb-8">
                   {/* Icône */}
                   <div className={cn(

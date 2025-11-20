@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { FAQSection } from '@/components/landing/FAQSection'
+import { FaqSection } from '@/components/landing/FaqSection'
 
 export const metadata: Metadata = {
   title: 'FAQ - Questions fréquentes',
@@ -24,7 +24,7 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Content */}
-      <FAQSection />
+      <FaqSection />
 
       {/* Additional Resources */}
       <section className="py-16">

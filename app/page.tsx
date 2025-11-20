@@ -1,10 +1,10 @@
 import { HeroSection } from '@/components/landing/HeroSection'
 import { FeatureList } from '@/components/landing/FeatureList'
-import { HowItWorks } from '@/components/landing/HowItWorks'
+import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection'
 import { PricingSection } from '@/components/landing/PricingSection'
-import { FAQSection } from '@/components/landing/FAQSection'
-import { CTASection } from '@/components/landing/CTASection'
+import { FaqSection } from '@/components/landing/FaqSection'
+import { CtaSection } from '@/components/landing/CtaSection'
 import { Footer } from '@/components/landing/Footer'
 
 export default function Home() {
@@ -46,11 +46,11 @@ export default function Home() {
 
       <HeroSection />
       <FeatureList />
-      <HowItWorks />
+      <HowItWorksSection />
       <TestimonialsSection />
       <PricingSection />
-      <FAQSection />
-      <CTASection />
+      <FaqSection />
+      <CtaSection />
       <Footer />
     </>
   )

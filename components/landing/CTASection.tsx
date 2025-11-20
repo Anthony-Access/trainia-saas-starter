@@ -1,87 +1,60 @@
 "use client"
 
-import { motion } from 'framer-motion'
-import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
-export function CTASection() {
-  const benefits = [
-    "Aucune carte bancaire requise",
-    "Essai gratuit de 14 jours",
-    "Annulation à tout moment",
-    "Accès à toutes les fonctionnalités",
-  ]
-
+export function CtaSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-slate-50 dark:from-slate-900 dark:via-slate-850 dark:to-gray-800">
-      {/* Grille en arrière-plan cohérente avec les autres sections */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_40%,transparent_100%)]" />
+    <section className="relative py-24 overflow-hidden">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-950 to-black z-0" />
 
-      {/* Effet de lueur gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/20 via-fuchsia-500/20 to-pink-500/20 rounded-full blur-3xl" />
+      {/* Abstract Shapes */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px]" />
+      </div>
 
-      <div className="relative mx-auto max-w-4xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center"
+          className="mx-auto max-w-3xl"
         >
-          {/* Badge "Rejoignez-nous" */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg"
-          >
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-            Rejoignez-nous
-          </motion.div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary-foreground border border-primary/20 mb-8 backdrop-blur-sm">
+            <Sparkles className="h-4 w-4" />
+            <span>Offre de lancement limitée</span>
+          </div>
 
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-            Prêt à révolutionner vos réponses aux appels d&apos;offres ?
+          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl mb-8 leading-tight">
+            Prêt à révolutionner vos réponses aux appels d'offres ?
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-300">
-            Rejoignez les entreprises qui utilisent déjà Memo-IA pour générer leurs mémoires techniques et gagner des marchés.
+
+          <p className="text-lg leading-8 text-gray-300 mb-10 max-w-2xl mx-auto">
+            Rejoignez les entreprises qui gagnent plus de marchés en y passant moins de temps.
+            Essai gratuit de 14 jours, sans carte bancaire.
           </p>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/sign-up">
-              <Button
-                size="lg"
-                className="group gap-3 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 px-8 py-6 text-base font-semibold text-white shadow-xl hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transition-all duration-200"
-              >
-                Démarrer gratuitement
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-transform group-hover:scale-110">
-                  <ArrowRight className="h-4 w-4 text-white" aria-hidden="true" />
-                </span>
+              <Button size="lg" className="text-lg px-8 py-6 h-auto rounded-full bg-white text-purple-950 hover:bg-gray-100 font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                Commencer gratuitement
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-
-            <Link href="/sign-in">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 px-8 py-6 text-base font-semibold transition-all duration-200"
-              >
-                Se connecter
+            <Link href="/demo">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6 h-auto rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white font-medium backdrop-blur-sm">
+                Réserver une démo
               </Button>
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-            {benefits.map((benefit) => (
-              <div key={benefit} className="flex items-center gap-2">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500">
-                  <CheckCircle className="h-3.5 w-3.5 text-white" aria-hidden="true" />
-                </div>
-                {benefit}
-              </div>
-            ))}
-          </div>
+          <p className="mt-8 text-sm text-gray-400">
+            Pas de carte requise • Annulation à tout moment
+          </p>
         </motion.div>
       </div>
     </section>
