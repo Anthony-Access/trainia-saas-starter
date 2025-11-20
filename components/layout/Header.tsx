@@ -20,14 +20,14 @@ export function Header() {
           {/* Logo with 4 colored squares */}
           <div className="relative h-10 w-10 transition-transform group-hover:scale-110">
             <div className="grid grid-cols-2 gap-1 h-full w-full rotate-0 group-hover:rotate-6 transition-all duration-300">
-              <div className="rounded-sm bg-gradient-to-br from-gray-800 to-gray-900 shadow-sm" />
-              <div className="rounded-sm bg-gradient-to-br from-purple-600 to-purple-700 shadow-sm" />
-              <div className="rounded-sm bg-gradient-to-br from-gray-400 to-gray-500 shadow-sm" />
-              <div className="rounded-sm bg-gradient-to-br from-purple-400 to-purple-500 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-purple-500 to-purple-600 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-fuchsia-500 to-fuchsia-600 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-violet-500 to-violet-600 shadow-sm" />
+              <div className="rounded-sm bg-gradient-to-br from-pink-500 to-pink-600 shadow-sm" />
             </div>
           </div>
           {/* Brand name */}
-          <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-purple-800 to-gray-600 bg-clip-text text-transparent dark:from-white dark:via-purple-300 dark:to-gray-300">
+          <span className="text-2xl font-bold text-foreground">
             Memo-IA
           </span>
         </Link>
