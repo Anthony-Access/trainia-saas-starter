@@ -65,12 +65,27 @@ export function HeroSection() {
                 Déjà adopté par plus de 500 entreprises
               </p>
               <div className="flex flex-wrap items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                {/* Placeholder Logos (Text for now, can be replaced with SVGs) */}
-                <span className="text-xl font-bold font-serif">Eiffage</span>
-                <span className="text-xl font-bold font-mono">Vinci</span>
-                <span className="text-xl font-bold font-sans italic">Bouygues</span>
-                <span className="text-xl font-bold">Spie</span>
-                <span className="text-xl font-bold font-serif">Engie</span>
+                {/* Logos Clients */}
+                <div className="flex items-center gap-2 font-bold text-xl">
+                  <div className="h-8 w-8 bg-foreground rounded-sm" />
+                  <span>EIFFAGE</span>
+                </div>
+                <div className="flex items-center gap-2 font-bold text-xl font-serif">
+                  <div className="h-8 w-8 bg-foreground rounded-full" />
+                  <span>VINCI</span>
+                </div>
+                <div className="flex items-center gap-2 font-bold text-xl italic">
+                  <div className="h-8 w-8 bg-foreground rotate-45 rounded-sm" />
+                  <span>BOUYGUES</span>
+                </div>
+                <div className="flex items-center gap-2 font-bold text-xl">
+                  <div className="h-8 w-8 bg-foreground rounded-tr-xl rounded-bl-xl" />
+                  <span>SPIE</span>
+                </div>
+                <div className="flex items-center gap-2 font-bold text-xl font-mono">
+                  <div className="h-8 w-8 bg-foreground rounded-full border-4 border-background" />
+                  <span>ENGIE</span>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -81,11 +96,14 @@ export function HeroSection() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-[3rem] rotate-12" />
 
             {/* Main Subject Placeholder (Person) */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[550px] bg-gradient-to-b from-gray-200 to-gray-300 rounded-t-[3rem] overflow-hidden shadow-2xl">
-              {/* Placeholder for Image */}
-              <div className="w-full h-full flex items-end justify-center pb-10">
-                <span className="text-gray-500 font-medium">Interface Application</span>
-              </div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[550px] rounded-t-[3rem] overflow-hidden shadow-2xl border-4 border-white/20">
+              <img
+                src="/dashboard-mockup.png"
+                alt="Interface Memo-IA"
+                className="w-full h-full object-cover object-top bg-gray-900"
+              />
+              {/* Gradient Overlay at bottom to blend */}
+              <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-900 to-transparent" />
             </div>
 
             {/* Floating Element 1: Success Rate (Top Right) */}

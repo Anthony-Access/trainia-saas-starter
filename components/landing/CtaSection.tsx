@@ -40,7 +40,7 @@ export function CtaSection() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/sign-up">
-              <Button size="lg" className="text-lg px-8 py-6 h-auto rounded-full bg-white text-purple-950 hover:bg-gray-100 font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <Button size="lg" className="text-lg px-8 py-6 h-auto rounded-full bg-white text-[#2e1065] hover:bg-gray-100 font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                 Commencer gratuitement
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
