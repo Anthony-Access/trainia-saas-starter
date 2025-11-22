@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import TanstackClientProvider from '@/components/providers/tanstack-client-provider'
 import ClerkClientProvider from '@/components/providers/clerk-client-provider'
+import SmoothScroll from '@/components/providers/SmoothScroll'
 import { Header } from '@/components/layout/Header'
 import { validateEnvironmentVariables } from '@/lib/security/validation/env'
 
@@ -101,8 +102,10 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <ClerkClientProvider>
           <TanstackClientProvider>
-            <Header />
-            <main className="-mt-px">{children}</main>
+            <SmoothScroll>
+              <Header />
+              <main className="-mt-px">{children}</main>
+            </SmoothScroll>
           </TanstackClientProvider>
         </ClerkClientProvider>
       </body>

@@ -1,166 +1,158 @@
-"use client"
+"use client";
 
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Play, CheckCircle2, TrendingUp, FileText, Zap } from 'lucide-react'
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export function HeroSection() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-purple-50/30 pt-20 pb-16 lg:pt-32 lg:pb-24 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950/30">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8 items-center">
+    <section className="relative min-h-screen w-full overflow-hidden bg-background pt-32 pb-20 lg:pt-48 lg:pb-32">
+      {/* Background Effects */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-500/10 blur-[120px] animate-pulse delay-1000" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02]" />
+      </div>
 
-          {/* LEFT COLUMN: Text Content */}
+      <div className="container relative z-10 mx-auto px-4 md:px-6">
+        <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
+          {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col justify-center text-left"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/50 mb-8"
           >
-            <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl mb-6 leading-[1.1]">
-              Remportez plus d&apos;
-              <span className="relative inline-block text-primary">
-                Appels d&apos;Offres
-                {/* Wavy Underline SVG - Purple */}
-                <svg
-                  className="absolute -bottom-2 left-0 w-full h-3 text-primary/80"
-                  viewBox="0 0 100 10"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M0 5 Q 50 10 100 5"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-            </h1>
-
-            <p className="text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed">
-              Générez des mémoires techniques sur-mesure, conformes et convaincants en quelques clics. Ne perdez plus de temps sur la rédaction, concentrez-vous sur votre expertise.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-6 mb-12">
-              {/* Primary Button - Pill Shape */}
-              <Link
-                href="/sign-up"
-                className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-300 hover:scale-105"
-              >
-                Essayer gratuitement
-              </Link>
-
-              {/* Secondary Button - Play Icon */}
-              <button className="group flex items-center gap-3 text-base font-medium text-foreground hover:text-primary transition-colors">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background shadow-sm group-hover:border-primary group-hover:text-primary transition-colors">
-                  <Play className="h-4 w-4 fill-current" />
-                </div>
-                Voir la démo
-              </button>
-            </div>
-
-            {/* Social Proof - Logos */}
-            <div className="space-y-4">
-              <p className="text-sm font-medium text-muted-foreground">
-                Déjà adopté par plus de 500 entreprises
-              </p>
-              <div className="flex flex-wrap items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                {/* Placeholder Logos (Text for now, can be replaced with SVGs) */}
-                <span className="text-xl font-bold font-serif">Eiffage</span>
-                <span className="text-xl font-bold font-mono">Vinci</span>
-                <span className="text-xl font-bold font-sans italic">Bouygues</span>
-                <span className="text-xl font-bold">Spie</span>
-                <span className="text-xl font-bold font-serif">Engie</span>
-              </div>
-            </div>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Nouvelle version 2.0 disponible
+            </span>
           </motion.div>
 
-          {/* RIGHT COLUMN: Floating UI Composition */}
-          <div className="relative h-[600px] w-full hidden lg:block">
-            {/* Background Shape */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-[3rem] rotate-12" />
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground mb-6 text-balance"
+          >
+            Gagnez vos appels d&apos;offres avec{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-blue-500 animate-gradient bg-300%">
+              l&apos;Intelligence Artificielle
+            </span>
+          </motion.h1>
 
-            {/* Main Subject Placeholder (Person) */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[550px] rounded-t-[3rem] overflow-hidden shadow-2xl border-4 border-white/20">
-              <img
-                src="/dashboard-mockup.png"
-                alt="Interface Memo-IA"
-                className="w-full h-full object-cover object-top bg-gray-900"
-              />
-              {/* Gradient Overlay at bottom to blend */}
-              <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-900 to-transparent" />
+          {/* Subheadline */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl text-balance leading-relaxed"
+          >
+            Memo-IA analyse vos documents, rédige vos mémoires techniques et optimise vos chances de succès.
+            Une solution entreprise pour les équipes exigeantes.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+          >
+            <Button
+              size="lg"
+              className="group relative overflow-hidden rounded-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)]"
+              asChild
+            >
+              <Link href="/sign-up">
+                <span className="relative z-10 flex items-center gap-2">
+                  Commencer gratuitement
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-full px-8 h-12 text-base hover:bg-secondary/80 transition-all duration-300"
+              asChild
+            >
+              <Link href="/contact">
+                Voir une démo
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+
+        {/* Dashboard Mockup */}
+        <motion.div
+          style={{ y, opacity }}
+          className="mt-20 relative mx-auto max-w-6xl perspective-1000"
+        >
+          <div className="relative rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl overflow-hidden transform rotate-x-12 transition-transform duration-1000 hover:rotate-x-0">
+            {/* Mockup Header */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/5">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                <div className="w-3 h-3 rounded-full bg-green-500/50" />
+              </div>
+              <div className="ml-4 h-2 w-32 rounded-full bg-white/10" />
             </div>
 
-            {/* Floating Element 1: Success Rate (Top Right) */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-20 right-10 bg-card border border-border p-4 rounded-2xl shadow-xl w-48 z-10"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                  <TrendingUp className="h-5 w-5" />
+            {/* Mockup Content */}
+            <div className="p-6 grid grid-cols-12 gap-6 h-[400px] md:h-[600px] bg-gradient-to-b from-background/50 to-background">
+              {/* Sidebar */}
+              <div className="hidden md:block col-span-2 space-y-4">
+                <div className="h-8 w-full rounded-lg bg-white/5" />
+                <div className="h-4 w-3/4 rounded bg-white/5" />
+                <div className="h-4 w-1/2 rounded bg-white/5" />
+                <div className="h-4 w-2/3 rounded bg-white/5" />
+              </div>
+
+              {/* Main Content */}
+              <div className="col-span-12 md:col-span-10 space-y-6">
+                <div className="flex justify-between items-center">
+                  <div className="h-8 w-1/3 rounded-lg bg-white/10" />
+                  <div className="h-8 w-24 rounded-lg bg-primary/20" />
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Taux de réussite</p>
-                  <p className="text-lg font-bold text-foreground">+ 45%</p>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="h-32 rounded-xl bg-white/5 border border-white/5 p-4">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 mb-4" />
+                    <div className="h-4 w-1/2 rounded bg-white/10" />
+                  </div>
+                  <div className="h-32 rounded-xl bg-white/5 border border-white/5 p-4">
+                    <div className="h-8 w-8 rounded-full bg-blue-500/20 mb-4" />
+                    <div className="h-4 w-1/2 rounded bg-white/10" />
+                  </div>
+                  <div className="h-32 rounded-xl bg-white/5 border border-white/5 p-4">
+                    <div className="h-8 w-8 rounded-full bg-green-500/20 mb-4" />
+                    <div className="h-4 w-1/2 rounded bg-white/10" />
+                  </div>
+                </div>
+
+                <div className="h-64 rounded-xl bg-white/5 border border-white/5 p-4 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-blue-500/5" />
+                  <div className="text-muted-foreground/50">Analyse en cours...</div>
                 </div>
               </div>
-              <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
-                <div className="h-full w-3/4 bg-green-500" />
-              </div>
-            </motion.div>
-
-            {/* Floating Element 2: Time Saved (Bottom Right) */}
-            <motion.div
-              animate={{ y: [0, 15, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-32 -right-4 bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-2xl shadow-2xl w-64 z-20 text-white rotate-[-5deg]"
-            >
-              <div className="flex justify-between items-start mb-6">
-                <Zap className="h-6 w-6 text-yellow-400" />
-                <div className="h-6 w-10 bg-white/20 rounded" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs text-white/60">Temps gagné</p>
-                <p className="text-xl font-bold">15h / semaine</p>
-              </div>
-              <div className="mt-4 flex justify-between items-center">
-                <div className="flex -space-x-2">
-                  <div className="h-6 w-6 rounded-full bg-blue-400 border border-gray-800" />
-                  <div className="h-6 w-6 rounded-full bg-purple-400 border border-gray-800" />
-                </div>
-                <p className="text-xs text-white/60">Équipe commerciale</p>
-              </div>
-            </motion.div>
-
-            {/* Floating Element 3: Proposal Generated (Left) */}
-            <motion.div
-              animate={{ x: [0, 10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="absolute top-40 left-0 bg-card border border-border p-3 rounded-2xl shadow-lg flex items-center gap-3 z-10"
-            >
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                <CheckCircle2 className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-foreground">Mémoire généré</p>
-                <p className="text-xs text-muted-foreground">À l&apos;instant</p>
-              </div>
-            </motion.div>
-
-            {/* Floating Element 4: Small Badge (Bottom Left) */}
-            <motion.div
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute bottom-20 left-10 bg-white p-2 rounded-lg shadow-md z-10"
-            >
-              <FileText className="h-5 w-5 text-primary" />
-            </motion.div>
-
+            </div>
           </div>
-        </div>
+
+          {/* Glow Effect behind mockup */}
+          <div className="absolute -inset-4 bg-gradient-to-r from-primary to-blue-600 rounded-xl blur-3xl opacity-20 -z-10" />
+        </motion.div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,175 +1,95 @@
-import Link from 'next/link'
-import { Linkedin, Twitter } from 'lucide-react'
+import Link from "next/link";
+import { Github, Linkedin, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="relative bg-background border-t border-border dark:bg-gradient-to-b dark:from-background dark:to-purple-950/20">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        {/* Main footer content - 4 columns */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Column 1: Logo + Description */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-3 group">
-              {/* Logo with 4 colored squares */}
-              <div className="relative h-10 w-10 transition-transform group-hover:scale-110">
-                <div className="grid grid-cols-2 gap-1 h-full w-full rotate-0 group-hover:rotate-6 transition-all duration-300">
-                  <div className="rounded-sm bg-gradient-to-br from-purple-500 to-purple-600 shadow-sm" />
-                  <div className="rounded-sm bg-gradient-to-br from-fuchsia-500 to-fuchsia-600 shadow-sm" />
-                  <div className="rounded-sm bg-gradient-to-br from-violet-500 to-violet-600 shadow-sm" />
-                  <div className="rounded-sm bg-gradient-to-br from-pink-500 to-pink-600 shadow-sm" />
-                </div>
-              </div>
-              {/* Brand name */}
-              <span className="text-2xl font-bold text-foreground">
-                Memo-IA
-              </span>
+    <footer className="bg-background border-t border-white/10 pt-20 pb-10">
+      <div className="container px-4 md:px-6 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="col-span-1 md:col-span-2">
+            <Link href="/" className="text-2xl font-bold tracking-tight mb-6 block">
+              Memo-IA
             </Link>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              L&apos;intelligence artificielle au service de vos appels d&apos;offres.
-              Générez vos mémoires techniques en quelques clics.
+            <p className="text-muted-foreground max-w-md mb-8">
+              La première solution d&apos;intelligence artificielle dédiée à la réponse aux appels d&apos;offres.
+              Gagnez du temps, gagnez des marchés.
             </p>
+            <div className="flex gap-4">
+              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Twitter className="h-5 w-5" />
+              </Link>
+              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Github className="h-5 w-5" />
+              </Link>
+              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Linkedin className="h-5 w-5" />
+              </Link>
+            </div>
           </div>
 
-          {/* Column 2: Produit */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-4">
-              Produit
-            </h3>
-            <ul className="space-y-3">
+            <h3 className="font-semibold mb-6">Produit</h3>
+            <ul className="space-y-4">
               <li>
-                <Link
-                  href="/#features"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
+                <Link href="#features" className="text-muted-foreground hover:text-primary transition-colors">
                   Fonctionnalités
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/#pricing"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
+                <Link href="#pricing" className="text-muted-foreground hover:text-primary transition-colors">
                   Tarifs
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/faq"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  FAQ
+                <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/changelog" className="text-muted-foreground hover:text-primary transition-colors">
+                  Nouveautés
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Entreprise */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-4">
-              Entreprise
-            </h3>
-            <ul className="space-y-3">
+            <h3 className="font-semibold mb-6">Entreprise</h3>
+            <ul className="space-y-4">
               <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
+                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
                   À propos
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
+                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/sign-up"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  Essai gratuit
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Légal */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-4">
-              Légal
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/legal/terms"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  CGU
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/legal/privacy"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
+                <Link href="/legal/privacy" className="text-muted-foreground hover:text-primary transition-colors">
                   Confidentialité
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/legal/mentions"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  Mentions légales
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/legal/cookies"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  Cookies
+                <Link href="/legal/terms" className="text-muted-foreground hover:text-primary transition-colors">
+                  CGU
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom section: separator + copyright + social links */}
-        <div className="mt-12 border-t border-border pt-8">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            {/* Copyright */}
-            <p className="text-sm text-muted-foreground">
-              © 2024 Memo-IA. Tous droits réservés.
-            </p>
-
-            {/* Social links */}
-            <div className="flex items-center space-x-6">
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-            </div>
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Memo-IA. Tous droits réservés.
+          </p>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-sm text-muted-foreground">Systèmes opérationnels</span>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }

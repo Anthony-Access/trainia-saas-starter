@@ -1,119 +1,132 @@
-"use client"
+"use client";
 
-import { motion } from 'framer-motion'
-import { Upload, Wand2, FileCheck, ArrowRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { motion, useScroll } from "framer-motion";
+import { FileText, PenTool, Send, Sparkles } from "lucide-react";
+import { useRef } from "react";
 
 const steps = [
     {
-        id: "01",
-        title: "Importez vos documents",
-        description: "Déposez simplement votre DCE (Dossier de Consultation des Entreprises) ou CCTP. Nous supportons PDF, Word et Excel.",
-        icon: Upload,
-        color: "bg-blue-500/10 text-blue-600"
+        id: 1,
+        title: "Importez votre DCE",
+        description:
+            "Glissez-déposez vos documents d'appel d'offres (CCTP, RC, etc.). Notre IA analyse instantanément les pièces du dossier pour en extraire les exigences clés.",
+        icon: FileText,
+        color: "bg-blue-500",
     },
     {
-        id: "02",
-        title: "L'IA analyse et rédige",
-        description: "Nos algorithmes identifient les critères d'évaluation et génèrent une réponse structurée et personnalisée en quelques minutes.",
-        icon: Wand2,
-        color: "bg-purple-500/10 text-purple-600"
+        id: 2,
+        title: "L'IA génère le plan",
+        description:
+            "En quelques secondes, Memo-IA structure votre mémoire technique. Il identifie les points bloquants et vous propose un plan détaillé conforme aux attentes de l'acheteur.",
+        icon: Sparkles,
+        color: "bg-purple-500",
     },
     {
-        id: "03",
-        title: "Validez et exportez",
-        description: "Relisez la proposition, ajustez si nécessaire grâce à l'éditeur intelligent, et exportez votre mémoire technique prêt à l'envoi.",
-        icon: FileCheck,
-        color: "bg-emerald-500/10 text-emerald-600"
-    }
-]
+        id: 3,
+        title: "Rédigez et personnalisez",
+        description:
+            "L'IA rédige les contenus techniques en s'appuyant sur votre base de connaissances. Vous gardez la main pour affiner et personnaliser les réponses.",
+        icon: PenTool,
+        color: "bg-pink-500",
+    },
+    {
+        id: 4,
+        title: "Exportez et envoyez",
+        description:
+            "Téléchargez votre mémoire technique parfaitement mis en page au format Word ou PDF, prêt à être signé et envoyé.",
+        icon: Send,
+        color: "bg-green-500",
+    },
+];
 
 export function HowItWorksSection() {
-    return (
-        <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-            </div>
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end end"],
+    });
 
-            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-                {/* Section Header */}
-                <div className="mx-auto max-w-2xl text-center mb-16">
+    return (
+        <section ref={containerRef} className="relative bg-background py-24 md:py-32">
+            <div className="container px-4 md:px-6 mx-auto">
+                <div className="text-center max-w-3xl mx-auto mb-20">
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-base font-semibold leading-7 text-primary uppercase tracking-wide"
+                        className="text-3xl md:text-5xl font-bold tracking-tight mb-6"
                     >
-                        Processus simple et rapide
+                        Comment ça <span className="text-primary">marche</span> ?
                     </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
-                    >
-                        Comment ça marche ?
-                    </motion.p>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="mt-6 text-lg leading-8 text-muted-foreground"
-                    >
-                        Une approche fluide en trois étapes pour transformer vos appels d&apos;offres en succès.
-                    </motion.p>
+                    <p className="text-lg text-muted-foreground">
+                        Un processus simple et fluide pour passer de l&apos;appel d&apos;offres à la réponse gagnante.
+                    </p>
                 </div>
 
-                {/* Steps Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative">
-                    {/* Connecting Line (Desktop only) */}
-                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-transparent via-border to-transparent -z-10" />
+                <div className="relative max-w-5xl mx-auto">
+                    {/* Connecting Line */}
+                    <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2 hidden md:block" />
 
-                    {steps.map((step, index) => (
-                        <motion.div
-                            key={step.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.2 }}
-                            className="relative flex flex-col items-center text-center group"
-                        >
-                            {/* Icon Circle */}
-                            <div className={cn(
-                                "w-24 h-24 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg bg-background border border-border relative z-10",
-                            )}>
-                                <div className={cn("w-16 h-16 rounded-xl flex items-center justify-center", step.color)}>
-                                    <step.icon className="w-8 h-8" />
+                    {/* Progress Line */}
+                    <motion.div
+                        style={{ scaleY: scrollYProgress }}
+                        className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-0.5 bg-primary -translate-x-1/2 origin-top hidden md:block"
+                    />
+
+                    <div className="space-y-12 md:space-y-32 relative">
+                        {steps.map((step, index) => (
+                            <motion.div
+                                key={step.id}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-100px" }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className={`flex flex-col md:flex-row gap-8 md:gap-16 items-center ${index % 2 === 0 ? "md:flex-row-reverse" : ""
+                                    }`}
+                            >
+                                {/* Content Side */}
+                                <div className="flex-1 text-left md:text-right">
+                                    <div className={`flex flex-col ${index % 2 === 0 ? "md:items-start md:text-left" : "md:items-end md:text-right"}`}>
+                                        <div className="flex items-center gap-4 mb-4 md:hidden">
+                                            <div className={`flex items-center justify-center w-14 h-14 rounded-full ${step.color} text-white shadow-lg shadow-${step.color}/20`}>
+                                                <step.icon className="w-6 h-6" />
+                                            </div>
+                                            <span className="text-xl font-bold text-primary">0{step.id}</span>
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
+                                        <p className="text-muted-foreground text-lg leading-relaxed max-w-md">
+                                            {step.description}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                {/* Step Number Badge */}
-                                <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center font-bold text-sm border-4 border-background">
-                                    {step.id}
+                                {/* Center Icon (Desktop) */}
+                                <div className="relative z-10 hidden md:flex items-center justify-center w-16 h-16 rounded-full bg-background border-4 border-secondary shadow-xl">
+                                    <div className={`w-10 h-10 rounded-full ${step.color} flex items-center justify-center text-white`}>
+                                        <step.icon className="w-5 h-5" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Content */}
-                            <h3 className="text-xl font-bold text-foreground mb-3">
-                                {step.title}
-                            </h3>
-                            <p className="text-muted-foreground leading-relaxed">
-                                {step.description}
-                            </p>
+                                {/* Visual Side (Placeholder for now, could be a screenshot) */}
+                                <div className="flex-1 w-full">
+                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/5 aspect-video shadow-2xl group hover:scale-105 transition-transform duration-500">
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${step.color}/10 to-transparent opacity-50`} />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <step.icon className={`w-16 h-16 ${step.color.replace('bg-', 'text-')} opacity-20`} />
+                                        </div>
 
-                            {/* Arrow for mobile (except last item) */}
-                            {index < steps.length - 1 && (
-                                <div className="md:hidden mt-8 mb-4 text-muted-foreground/30">
-                                    <ArrowRight className="w-6 h-6 rotate-90" />
+                                        {/* Fake UI Elements */}
+                                        <div className="absolute top-4 left-4 right-4 h-2 bg-white/10 rounded-full w-1/3" />
+                                        <div className="absolute top-8 left-4 right-4 h-2 bg-white/5 rounded-full w-1/2" />
+                                        <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-white/10" />
+                                    </div>
                                 </div>
-                            )}
-                        </motion.div>
-                    ))}
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
-    )
+    );
 }

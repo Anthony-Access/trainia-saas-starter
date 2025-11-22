@@ -1,235 +1,162 @@
-"use client"
+"use client";
 
-import { motion } from 'framer-motion'
-import { Check, X, ArrowRight, Star, Zap, Building2 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
+import { Button } from "@/components/ui/button";
+import { Check, Sparkles } from "lucide-react";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import Link from "next/link";
+import { MouseEvent } from "react";
 
 const plans = [
   {
     name: "Starter",
-    description: "Pour tester la puissance de l'IA",
-    price: "49",
+    price: "49€",
     period: "/mois",
-    trial: "14 jours gratuits",
-    icon: Zap,
-    popular: false,
+    description: "Pour les indépendants et TPE qui débutent.",
     features: [
-      { text: "5 mémoires techniques par mois", included: true },
-      { text: "Génération automatique de contenu", included: true },
-      { text: "Analyse basique du cahier des charges", included: true },
-      { text: "Export PDF standard", included: true },
-      { text: "Support par email", included: true },
-      { text: "Personnalisation avancée", included: false },
-      { text: "Bibliothèque de modèles premium", included: false },
-      { text: "Support prioritaire (réponse < 48h)", included: false },
+      "5 mémoires techniques / mois",
+      "Analyse IA basique",
+      "Export PDF",
+      "Support email",
     ],
-    cta: "Commencer l'essai gratuit",
-    highlight: "border-border"
+    cta: "Commencer",
+    popular: false,
   },
   {
-    name: "Professional",
-    description: "Pour les PME et équipes commerciales",
-    price: "149",
+    name: "Pro",
+    price: "149€",
     period: "/mois",
-    trial: null,
-    icon: Star,
-    popular: true,
+    description: "Pour les PME qui veulent accélérer.",
     features: [
-      { text: "25 mémoires techniques par mois", included: true },
-      { text: "Génération automatique de contenu", included: true },
-      { text: "Analyse approfondie du cahier des charges", included: true },
-      { text: "Export PDF professionnel", included: true },
-      { text: "Personnalisation avancée (charte graphique)", included: true },
-      { text: "Bibliothèque de modèles premium", included: true },
-      { text: "Support prioritaire (réponse < 48h)", included: true },
+      "Mémoires illimités",
+      "Analyse IA avancée",
+      "Personnalisation complète",
+      "Export Word & PDF",
+      "Support prioritaire",
     ],
-    cta: "Démarrer maintenant",
-    highlight: "border-primary ring-1 ring-primary"
+    cta: "Essayer gratuitement",
+    popular: true,
   },
   {
     name: "Enterprise",
-    description: "Pour les grandes entreprises",
-    price: "249",
-    period: "/mois",
-    trial: null,
-    icon: Building2,
-    popular: false,
+    price: "Sur devis",
+    period: "",
+    description: "Pour les grandes structures et équipes.",
     features: [
-      { text: "50 mémoires techniques par mois", included: true },
-      { text: "Génération automatique de contenu", included: true },
-      { text: "Export multi-formats (PDF, Word, etc.)", included: true },
-      { text: "Personnalisation complète", included: true },
-      { text: "Bibliothèque de modèles illimitée", included: true },
-      { text: "Support prioritaire (réponse < 24h)", included: true },
-      { text: "Account manager dédié", included: true },
+      "Tout illimité",
+      "API access",
+      "Formation dédiée",
+      "SLA garanti",
+      "Account Manager dédié",
     ],
-    cta: "Démarrer maintenant",
-    highlight: "border-border"
+    cta: "Contacter les ventes",
+    popular: false,
+  },
+];
+
+function PricingCard({ plan }: { plan: typeof plans[0] }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
   }
-]
+
+  return (
+    <div
+      className={`group relative rounded-3xl border border-white/10 bg-white/5 px-8 py-12 shadow-2xl transition-transform duration-300 hover:-translate-y-2 ${plan.popular ? "bg-white/10 ring-1 ring-primary/50" : ""
+        }`}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Spotlight Effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(124, 58, 237, 0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      {plan.popular && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-sm font-medium text-white shadow-lg shadow-primary/30">
+          <span className="flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> Le plus populaire
+          </span>
+        </div>
+      )}
+
+      <div className="relative z-10 flex flex-col h-full">
+        <h3 className="text-xl font-semibold leading-7 text-foreground">
+          {plan.name}
+        </h3>
+        <p className="mt-4 flex items-baseline gap-x-2">
+          <span className="text-5xl font-bold tracking-tight text-foreground">
+            {plan.price}
+          </span>
+          <span className="text-base text-muted-foreground">{plan.period}</span>
+        </p>
+        <p className="mt-6 text-base leading-7 text-muted-foreground">
+          {plan.description}
+        </p>
+        <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-muted-foreground flex-1">
+          {plan.features.map((feature) => (
+            <li key={feature} className="flex gap-x-3">
+              <Check className="h-6 w-5 flex-none text-primary" aria-hidden="true" />
+              {feature}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-8">
+          <Button
+            className={`w-full rounded-full h-12 text-base ${plan.popular ? 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25' : 'bg-white/10 hover:bg-white/20 text-foreground'}`}
+            asChild
+          >
+            <Link href="/sign-up">{plan.cta}</Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function PricingSection() {
   return (
-    <section className="relative py-24 sm:py-32 bg-background overflow-hidden">
-      {/* Grille en arrière-plan avec effet mask */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_40%,transparent_100%)]" />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
-            TARIFS
+    <section className="relative py-24 bg-background overflow-hidden">
+      <div className="container px-4 md:px-6 mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-6"
+          >
+            Des tarifs <span className="text-primary">transparents</span>
+          </motion.h2>
+          <p className="text-lg text-muted-foreground">
+            Choisissez le plan qui correspond à vos ambitions. Sans engagement.
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Choisissez le plan qui vous convient
-          </h2>
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Des solutions adaptées à chaque besoin, de l&apos;entrepreneur à la grande entreprise
-          </p>
-        </motion.div>
+        </div>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-3 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={cn(
-                "relative flex flex-col",
-                plan.popular ? 'lg:-mt-4 lg:mb-4' : ''
-              )}
+              transition={{ delay: index * 0.1 }}
             >
-              {/* Badge "POPULAIRE" */}
-              {plan.popular && (
-                <div className="absolute -top-5 left-0 right-0 flex justify-center z-20">
-                  <div className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground shadow-lg">
-                    ⭐ POPULAIRE
-                  </div>
-                </div>
-              )}
-
-              <Card
-                className={cn(
-                  "flex-1 flex flex-col transition-all duration-300 hover:shadow-2xl bg-card relative overflow-hidden",
-                  plan.highlight,
-                  plan.popular ? 'shadow-xl scale-105 z-10 border-primary/50' : 'hover:scale-105 border-border/50'
-                )}
-              >
-                {plan.popular && (
-                  <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
-                )}
-                <CardHeader className="space-y-4 pb-8">
-                  {/* Icône */}
-                  <div className={cn(
-                    "inline-flex h-12 w-12 items-center justify-center rounded-lg shadow-sm",
-                    plan.popular ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                  )}>
-                    <plan.icon className="h-6 w-6" aria-hidden="true" />
-                  </div>
-
-                  <div>
-                    <CardTitle className="text-2xl text-foreground">{plan.name}</CardTitle>
-                    <CardDescription className="mt-2 text-base text-muted-foreground">
-                      {plan.description}
-                    </CardDescription>
-                  </div>
-
-                  {/* Prix */}
-                  <div className="flex items-baseline gap-1">
-                    {plan.price === "Sur mesure" ? (
-                      <p className="text-4xl font-bold tracking-tight text-foreground">
-                        {plan.price}
-                      </p>
-                    ) : (
-                      <>
-                        <p className="text-4xl font-bold tracking-tight text-foreground">
-                          {plan.price}€
-                        </p>
-                        <p className="text-lg text-muted-foreground">
-                          {plan.period}
-                        </p>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Trial info */}
-                  {plan.trial && (
-                    <p className="text-sm font-medium text-primary">
-                      {plan.trial}
-                    </p>
-                  )}
-                </CardHeader>
-
-                <CardContent className="space-y-4 pb-8 flex-1">
-                  <div className="space-y-3">
-                    {plan.features.map((feature, featureIndex) => (
-                      <div
-                        key={featureIndex}
-                        className={cn(
-                          "flex items-start gap-3",
-                          !feature.included && "opacity-50"
-                        )}
-                      >
-                        {feature.included ? (
-                          <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
-                            <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                          </div>
-                        ) : (
-                          <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-muted">
-                            <X className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-                          </div>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                          {feature.text}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-
-                <CardFooter className="mt-auto pt-8">
-                  <Link href="/sign-up" className="w-full">
-                    <Button
-                      size="lg"
-                      variant={plan.popular ? "default" : "outline"}
-                      className={cn(
-                        "w-full gap-2 font-semibold transition-all duration-200",
-                        plan.popular && "shadow-md hover:shadow-lg"
-                      )}
-                    >
-                      {plan.cta}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+              <PricingCard plan={plan} />
             </motion.div>
           ))}
         </div>
-
-        {/* Garantie / Info supplémentaire */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <p className="text-sm text-muted-foreground">
-            Tous les plans incluent : Mises à jour automatiques • Sécurité des données (RGPD) • Annulation à tout moment
-          </p>
-        </motion.div>
       </div>
     </section>
-  )
+  );
 }
