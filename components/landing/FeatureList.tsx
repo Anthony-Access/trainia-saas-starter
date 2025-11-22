@@ -77,7 +77,7 @@ export function FeatureList() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 hover:bg-white/10 transition-colors ${feature.className}`}
+              className={`group relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-sm hover:shadow-md transition-all duration-300 ${feature.className}`}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

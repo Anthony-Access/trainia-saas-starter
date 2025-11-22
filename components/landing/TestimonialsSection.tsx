@@ -83,7 +83,7 @@ export function TestimonialsSection() {
           {duplicatedTestimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[350px] md:w-[450px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors"
+              className="flex-shrink-0 w-[350px] md:w-[450px] p-8 rounded-2xl bg-card border border-border backdrop-blur-sm shadow-sm hover:shadow-md transition-all"
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">

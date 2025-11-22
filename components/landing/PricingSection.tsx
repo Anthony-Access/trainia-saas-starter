@@ -65,7 +65,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
 
   return (
     <div
-      className={`group relative rounded-3xl border border-white/10 bg-white/5 px-8 py-12 shadow-2xl transition-transform duration-300 hover:-translate-y-2 ${plan.popular ? "bg-white/10 ring-1 ring-primary/50" : ""
+      className={`group relative rounded-3xl border border-border bg-card px-8 py-12 shadow-2xl transition-transform duration-300 hover:-translate-y-2 ${plan.popular ? "ring-1 ring-primary/50" : ""
         }`}
       onMouseMove={handleMouseMove}
     >
@@ -114,7 +114,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
         </ul>
         <div className="mt-8">
           <Button
-            className={`w-full rounded-full h-12 text-base ${plan.popular ? 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25' : 'bg-white/10 hover:bg-white/20 text-foreground'}`}
+            className={`w-full rounded-full h-12 text-base ${plan.popular ? 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25' : 'bg-secondary hover:bg-secondary/80 text-foreground'}`}
             asChild
           >
             <Link href="/sign-up">{plan.cta}</Link>

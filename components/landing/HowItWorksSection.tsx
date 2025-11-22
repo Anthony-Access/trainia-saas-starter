@@ -110,7 +110,7 @@ export function HowItWorksSection() {
 
                                 {/* Visual Side (Placeholder for now, could be a screenshot) */}
                                 <div className="flex-1 w-full">
-                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/5 aspect-video shadow-2xl group hover:scale-105 transition-transform duration-500">
+                                    <div className="relative rounded-2xl overflow-hidden border border-border bg-card aspect-video shadow-2xl group hover:scale-105 transition-transform duration-500">
                                         <div className={`absolute inset-0 bg-gradient-to-br ${step.color}/10 to-transparent opacity-50`} />
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <step.icon className={`w-16 h-16 ${step.color.replace('bg-', 'text-')} opacity-20`} />
