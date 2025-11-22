@@ -25,9 +25,9 @@ const plans = [
     name: "Pro",
     price: "149€",
     period: "/mois",
-    description: "Pour les PME qui veulent accélérer.",
+    description: "Pour les PME en croissance.",
     features: [
-      "Mémoires illimités",
+      "20 mémoires techniques / mois",
       "Analyse IA avancée",
       "Personnalisation complète",
       "Export Word & PDF",
@@ -37,18 +37,18 @@ const plans = [
     popular: true,
   },
   {
-    name: "Enterprise",
-    price: "Sur devis",
-    period: "",
-    description: "Pour les grandes structures et équipes.",
+    name: "Business",
+    price: "299€",
+    period: "/mois",
+    description: "Pour les agences et équipes performantes.",
     features: [
-      "Tout illimité",
+      "Mémoires illimités",
+      "Analyse IA experte",
+      "Multi-utilisateurs (5)",
       "API access",
-      "Formation dédiée",
-      "SLA garanti",
       "Account Manager dédié",
     ],
-    cta: "Contacter les ventes",
+    cta: "Commencer",
     popular: false,
   },
 ];
@@ -143,7 +143,7 @@ export function PricingSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -156,6 +156,22 @@ export function PricingSection() {
             </motion.div>
           ))}
         </div>
+
+        {/* Enterprise / Custom Quote Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto text-center bg-card border border-border rounded-3xl p-8 md:p-12 shadow-sm"
+        >
+          <h3 className="text-2xl font-bold mb-4">Besoin d&apos;une offre sur mesure ?</h3>
+          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Pour les grandes entreprises nécessitant un volume important, des intégrations spécifiques ou un accompagnement personnalisé.
+          </p>
+          <Button variant="outline" size="lg" className="rounded-full px-8" asChild>
+            <Link href="/contact">Contacter notre équipe commerciale</Link>
+          </Button>
+        </motion.div>
       </div>
     </section>
   );
