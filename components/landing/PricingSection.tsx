@@ -14,7 +14,7 @@ const plans = [
     description: "Pour les indépendants et TPE qui débutent.",
     features: [
       "5 mémoires techniques / mois",
-      "Analyse IA basique",
+      "Analyse & Rédaction IA",
       "Export PDF",
       "Support email",
     ],
@@ -28,7 +28,7 @@ const plans = [
     description: "Pour les PME en croissance.",
     features: [
       "20 mémoires techniques / mois",
-      "Analyse IA avancée",
+      "Analyse & Rédaction IA",
       "Personnalisation complète",
       "Export Word & PDF",
       "Support prioritaire",
@@ -43,7 +43,7 @@ const plans = [
     description: "Pour les agences et équipes performantes.",
     features: [
       "Mémoires illimités",
-      "Analyse IA experte",
+      "Analyse & Rédaction IA",
       "Multi-utilisateurs (5)",
       "API access",
       "Account Manager dédié",
