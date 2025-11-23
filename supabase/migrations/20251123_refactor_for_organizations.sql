@@ -1,5 +1,5 @@
 -- ============================================================================
--- REFACTOR FOR ORGANIZATIONS (B2B)
+-- REFACTOR FOR ORGANIZATIONS (B2B) - IDEMPOTENT VERSION
 -- ============================================================================
 -- Date: 2025-11-23
 -- Description: Adds org_id support and updates RLS for Multi-Tenant B2B
@@ -11,8 +11,7 @@ RETURNS TEXT AS $$
 DECLARE
   org_id TEXT;
 BEGIN
-  -- Extract org_id from JWT claims (Clerk passes it in 'org_id' or 'org_slug' depending on config)
-  -- We assume 'org_id' is present in the session claims
+  -- Extract org_id from JWT claims (Clerk passes it in 'org_id')
   org_id := NULLIF(
     current_setting('request.jwt.claims', true)::json->>'org_id',
     ''
@@ -27,21 +26,40 @@ GRANT EXECUTE ON FUNCTION requesting_org_id() TO anon;
 
 -- 2. Update Tables to support Organizations
 
--- Customers: Add org_id (This table maps App Entity -> Stripe Customer)
--- In B2B, the "Customer" is the Organization.
-ALTER TABLE "public"."customers" ADD COLUMN IF NOT EXISTS "org_id" TEXT;
+-- Customers: Add org_id (IF NOT EXISTS pour éviter les erreurs)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'customers' AND column_name = 'org_id'
+  ) THEN
+    ALTER TABLE "public"."customers" ADD COLUMN "org_id" TEXT;
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS "customers_org_id_idx" ON "public"."customers" ("org_id");
 
--- Subscriptions: Add org_id (Subscriptions belong to Orgs)
-ALTER TABLE "public"."subscriptions" ADD COLUMN IF NOT EXISTS "org_id" TEXT;
+-- Subscriptions: Add org_id (IF NOT EXISTS pour éviter les erreurs)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'subscriptions' AND column_name = 'org_id'
+  ) THEN
+    ALTER TABLE "public"."subscriptions" ADD COLUMN "org_id" TEXT;
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS "subscriptions_org_id_idx" ON "public"."subscriptions" ("org_id");
 
--- 3. Update RLS Policies
+-- 3. Update RLS Policies (DROP IF EXISTS avant recréation)
 
 -- CUSTOMERS
 DROP POLICY IF EXISTS "Users can view own customer data" ON "public"."customers";
 DROP POLICY IF EXISTS "Users can insert own customer data" ON "public"."customers";
 DROP POLICY IF EXISTS "Users can update own customer data" ON "public"."customers";
+DROP POLICY IF EXISTS "Org members can view org customer data" ON "public"."customers";
+DROP POLICY IF EXISTS "Org admins can update org customer data" ON "public"."customers";
 
 CREATE POLICY "Org members can view org customer data"
 ON "public"."customers"
@@ -49,8 +67,6 @@ FOR SELECT
 TO authenticated
 USING (org_id = requesting_org_id());
 
--- Note: Insert/Update usually handled by Webhooks (Service Role), 
--- but if allowed from client, must check org_id.
 CREATE POLICY "Org admins can update org customer data"
 ON "public"."customers"
 FOR UPDATE
@@ -62,6 +78,7 @@ WITH CHECK (org_id = requesting_org_id());
 DROP POLICY IF EXISTS "Users can view own subscriptions" ON "public"."subscriptions";
 DROP POLICY IF EXISTS "owner" ON "public"."subscriptions";
 DROP POLICY IF EXISTS "Users can request updates to own subscription" ON "public"."subscriptions";
+DROP POLICY IF EXISTS "Org members can view org subscriptions" ON "public"."subscriptions";
 
 CREATE POLICY "Org members can view org subscriptions"
 ON "public"."subscriptions"

@@ -169,32 +169,9 @@ export default clerkMiddleware(async (auth, req) => {
   // NOTE: Rate limiting moved to individual API routes to avoid Edge Runtime restrictions
   // See: app/api/*/route.ts for rate limiting implementation
 
-  // 🛡️ SECURITY: Organization-First Flow - Enforce onboarding completion
-  // Every authenticated user MUST belong to an organization
-  const { userId, sessionClaims } = await auth();
-
-  if (userId) {
-    const orgId = sessionClaims?.org_id;
-    const isOnboardingPage = url.pathname === '/onboarding';
-    const isSignOutPage = url.pathname.includes('/sign-out');
-    const isApiRoute = url.pathname.startsWith('/api');
-    const isPublicRoute = url.pathname === '/' || url.pathname.startsWith('/legal') || url.pathname.startsWith('/about') || url.pathname.startsWith('/faq') || url.pathname.startsWith('/contact');
-
-    // If user is authenticated but has no organization
-    if (!orgId) {
-      // Allow access to onboarding page, sign-out, and public routes
-      if (!isOnboardingPage && !isSignOutPage && !isPublicRoute && !isApiRoute) {
-        console.log('🔄 Redirecting user without org_id to onboarding:', userId);
-        return Response.redirect(new URL('/onboarding', req.url));
-      }
-    } else {
-      // User has an org_id, don't allow them to access onboarding again
-      if (isOnboardingPage) {
-        console.log('✅ User already has org_id, redirecting to dashboard');
-        return Response.redirect(new URL('/dashboard', req.url));
-      }
-    }
-  }
+  // 🛡️ SECURITY: Clerk handles organization onboarding natively
+  // Flow: /sign-up/tasks/choose-organization enforced by Clerk when Organizations are enabled
+  // After org creation, user is redirected to /dashboard (configured in Clerk Dashboard)
 
   // Protection des routes
   if (isProtectedRoute(req)) {
