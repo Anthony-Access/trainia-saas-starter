@@ -1,12 +1,11 @@
 'use client'
 
-import { useOrganizationList, useUser } from '@clerk/nextjs'
+import { useOrganizationList } from '@clerk/nextjs'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function OnboardingPage() {
     const { createOrganization } = useOrganizationList()
-    const { user } = useUser()
     const router = useRouter()
     const [companyName, setCompanyName] = useState('')
     const [loading, setLoading] = useState(false)
