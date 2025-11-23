@@ -10,7 +10,7 @@ export function HeroSection() {
   const y = useTransform(scrollY, [0, 500], [0, 150]);
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-background pt-32 pb-20 lg:pt-48 lg:pb-32">
+    <section className="relative min-h-screen w-full overflow-hidden bg-background pt-0 pb-20 lg:pt-0 lg:pb-32">
       {/* Background Effects */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[120px] animate-pulse" />
@@ -19,7 +19,7 @@ export function HeroSection() {
       </div>
 
       <div className="container relative z-10 mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
+        <div className="flex flex-col items-center text-center max-w-5xl mx-auto -mt-6">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

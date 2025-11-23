@@ -14,7 +14,7 @@ export function Header() {
       {/* Grid pattern background */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-50" />
 
-      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 group">
           {/* Logo with 4 colored squares */}
