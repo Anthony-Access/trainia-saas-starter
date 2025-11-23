@@ -1,14 +1,14 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
-import { getClientIP, isValidIPFormat } from "@/lib/security/validation/ip"
+import { getClientIP } from "@/lib/security/validation/ip"
 
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/app(.*)'])
 
 // ✅ SECURITY: Whitelist of allowed origins for CORS
 const ALLOWED_ORIGINS = [
-    process.env.NEXT_PUBLIC_SITE_URL,
-    'http://localhost:3000',
-    'http://localhost:3001',
-    // Add your production domains here
+  process.env.NEXT_PUBLIC_SITE_URL,
+  'http://localhost:3000',
+  'http://localhost:3001',
+  // Add your production domains here
 ].filter(Boolean) as string[];
 
 // ✅ SECURITY: Whitelist of allowed redirect paths to prevent Open Redirect attacks
@@ -134,9 +134,6 @@ function validatePath(path: string): string {
   return pathOnly;
 }
 
-// ✅ REFACTORED: IP validation and extraction logic centralized in @/utils/ip-validation
-// This eliminates code duplication and improves maintainability
-
 export default clerkMiddleware(async (auth, req) => {
   const url = new URL(req.url);
 
@@ -172,11 +169,39 @@ export default clerkMiddleware(async (auth, req) => {
   // NOTE: Rate limiting moved to individual API routes to avoid Edge Runtime restrictions
   // See: app/api/*/route.ts for rate limiting implementation
 
+  // 🛡️ SECURITY: Organization-First Flow - Enforce onboarding completion
+  // Every authenticated user MUST belong to an organization
+  const { userId, sessionClaims } = await auth();
+
+  if (userId) {
+    const orgId = sessionClaims?.org_id;
+    const isOnboardingPage = url.pathname === '/onboarding';
+    const isSignOutPage = url.pathname.includes('/sign-out');
+    const isApiRoute = url.pathname.startsWith('/api');
+    const isPublicRoute = url.pathname === '/' || url.pathname.startsWith('/legal') || url.pathname.startsWith('/about') || url.pathname.startsWith('/faq') || url.pathname.startsWith('/contact');
+
+    // If user is authenticated but has no organization
+    if (!orgId) {
+      // Allow access to onboarding page, sign-out, and public routes
+      if (!isOnboardingPage && !isSignOutPage && !isPublicRoute && !isApiRoute) {
+        console.log('🔄 Redirecting user without org_id to onboarding:', userId);
+        return Response.redirect(new URL('/onboarding', req.url));
+      }
+    } else {
+      // User has an org_id, don't allow them to access onboarding again
+      if (isOnboardingPage) {
+        console.log('✅ User already has org_id, redirecting to dashboard');
+        return Response.redirect(new URL('/dashboard', req.url));
+      }
+    }
+  }
+
   // Protection des routes
   if (isProtectedRoute(req)) {
     // Redirect to sign-in if user is not authenticated
-    const { userId } = await auth()
-    if (!userId) {
+    const { userId: protectedUserId, getToken } = await auth()
+
+    if (!protectedUserId) {
       const signInUrl = new URL('/sign-in', req.url)
 
       // ✅ SECURITY: Validate redirect URL to prevent Open Redirect attacks
@@ -198,8 +223,13 @@ export default clerkMiddleware(async (auth, req) => {
 
       return Response.redirect(signInUrl)
     }
+
+    // 🛡️ SECURITY: Placeholder for Supabase token validation
+    // Ensure we can generate a token for Supabase RLS
+    // const supabaseToken = await getToken({ template: 'supabase' })
+    // if (!supabaseToken) console.warn("⚠️ No Supabase token found for user")
   }
-})  
+})
 
 export const config = {
   matcher: [

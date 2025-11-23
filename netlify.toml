@@ -8,3 +8,11 @@
 # Environment variables must be configured in Netlify UI:
 # Site configuration > Environment variables
 # See NETLIFY_SETUP.md for instructions
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
