@@ -17,6 +17,11 @@ export default function OnboardingPage() {
         setError('')
 
         try {
+            // ✅ SECURITY: Vérifier que la fonction existe
+            if (!createOrganization) {
+                throw new Error('La création d\'organisation n\'est pas disponible.')
+            }
+
             // 🛡️ SECURITY: Créer l'organisation Clerk avec l'utilisateur comme admin
             await createOrganization({ name: companyName })
 
